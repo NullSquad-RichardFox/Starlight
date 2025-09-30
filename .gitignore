@@ -51,3 +51,6 @@ Makefile
 # Log files
 **/Log
 *.log
+
+# Include Programs
+!Programs/**
