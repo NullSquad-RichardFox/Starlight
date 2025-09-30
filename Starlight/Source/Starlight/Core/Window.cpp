@@ -40,7 +40,8 @@ Window::Window(const WindowProps& props)
 		glfwSetWindowCloseCallback(NativeWindow, [](GLFWwindow* window) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-			});
+			data->CloseHandle();
+		});
 	}
 
 	if (props.bWindowInFocusEventActive)
@@ -49,7 +50,8 @@ Window::Window(const WindowProps& props)
 		glfwSetWindowFocusCallback(NativeWindow, [](GLFWwindow* window, int32 focus) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-			});
+			data->FocusHandle(focus == 1);
+		});
 	}
 
 	if (props.bWindowResizeEventActive)
@@ -58,9 +60,8 @@ Window::Window(const WindowProps& props)
 		glfwSetWindowSizeCallback(NativeWindow, [](GLFWwindow* window, int32 width, int32 height) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-			data->Width = width;
-			data->Height = height;
-			});
+			data->ResizeHandle((uint32)width, (uint32)height);
+		});
 	}
 
 	if (props.bKeyInputEventActive)
@@ -69,48 +70,46 @@ Window::Window(const WindowProps& props)
 		glfwSetKeyCallback(NativeWindow, [](GLFWwindow* window, int32 key, int32 scancode, int32 action, int32 mods) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-			ETriggerEvent triggerEvent;
+			EInputAction inputAction;
 			switch (action)
 			{
 			case GLFW_PRESS:
-				triggerEvent = ETriggerEvent::Pressed;
+				inputAction = EInputAction::Triggered;
 				break;
 
 			case GLFW_RELEASE:
-				triggerEvent = ETriggerEvent::Released;
+				inputAction = EInputAction::Released;
 				break;
 
 			case GLFW_REPEAT:
-				triggerEvent = ETriggerEvent::Repeated;
+				inputAction = EInputAction::Pressed;
 				break;
 			}
 
-			FKeyInputWindowEvent e((Keys::EKeyType)(key), FModifierKeys(mods), triggerEvent);
-			data->EventHandler(e);
-			});
+			data->InputHandle(EKeyType(key), inputAction, (uint32)mods);
+		});
 
 		glfwSetMouseButtonCallback(NativeWindow, [](GLFWwindow* window, int32 button, int32 action, int32 mods) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-			ETriggerEvent triggerEvent;
+			EInputAction inputAction;
 			switch (action)
 			{
 			case GLFW_PRESS:
-				triggerEvent = ETriggerEvent::Pressed;
+				inputAction = EInputAction::Triggered;
 				break;
 
 			case GLFW_RELEASE:
-				triggerEvent = ETriggerEvent::Released;
+				inputAction = EInputAction::Released;
 				break;
 
 			case GLFW_REPEAT:
-				triggerEvent = ETriggerEvent::Repeated;
+				inputAction = EInputAction::Pressed;
 				break;
 			}
 
-			FKeyInputWindowEvent e((Keys::EKeyType)(button + 400), FModifierKeys(mods), triggerEvent);
-			data->EventHandler(e);
-			});
+			data->InputHandle(EKeyType(key+400), inputAction, (uint32)mods);
+		});
 	}
 
 	if (props.bTextInputEventActive)
@@ -119,7 +118,8 @@ Window::Window(const WindowProps& props)
 		glfwSetCharCallback(NativeWindow, [](GLFWwindow* window, uint32 codepoint) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-			});
+			data->TextHandle(char(codepoint));
+		});
 	}
 
 	if (props.bRelativeMouseOffsetEventActive)
@@ -128,8 +128,8 @@ Window::Window(const WindowProps& props)
 		glfwSetCursorPosCallback(NativeWindow, [](GLFWwindow* window, double xpos, double ypos) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-
-			});
+			data->MouseOffsetHandle((float)xpos, (float)ypos);
+		});
 	}
 
 	if (props.bMouseScrollEventActive)
@@ -138,7 +138,8 @@ Window::Window(const WindowProps& props)
 		glfwSetScrollCallback(NativeWindow, [](GLFWwindow* window, double xoffset, double yoffset) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-			});
+			data->ScrollHandle((float)yoffset);
+		});
 	}
 }
 

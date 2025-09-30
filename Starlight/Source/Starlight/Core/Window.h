@@ -30,21 +30,23 @@ public:
 private:
 	struct WindowData
 	{
-		int32 Width, Height;
-		std::string Title;
-
-		double CursorPosX, CursorPosY;
+		std::function<void(uint32, uint32)> ResizeHandle;
+		std::function<void()> CloseHandle;
+		std::function<void(bool)> FocusHandle;
+		std::function<void(char)> TextHandle;
+		std::function<void(EKeyType, EInputAction, uint32)> InputHandle;
+		std::function<void(float)> ScrollHandle;
+		std::function<void(float, float)> MouseOffsetHandle;
 	};
 
 private:
 	void OnWindowResizeEvent(uint32 width, uint32 height);
 	void OnWindowCloseEvent();
-	void OnWindowInFocusEvent();
-	void OnTextInputEvent();
-	void OnKeyInputEvent();
-	void OnMouseInputEvent();
-	void OnMouseScrollEvent();
-	void OnMouseOffsetEvent();
+	void OnWindowInFocusEvent(bool bGainedFocus);
+	void OnTextInputEvent(char text);
+	void OnInputEvent(EKeyType key, EInputAction inputAction, uint32 modKeys);
+	void OnMouseScrollEvent(float offset);
+	void OnMouseOffsetEvent(float xpos, float ypos);
 
 	GLFWwindow* NativeWindow;
 	WindowData Data;
