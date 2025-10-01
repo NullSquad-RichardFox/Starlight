@@ -1,4 +1,3 @@
-#include "pcch.h"
 #include "Window.h"
 #include "Render/RenderUtilities.h"
 
@@ -8,14 +7,10 @@
 
 Window::Window(const WindowProps& props)
 {
-	Data.Title = props.Title;
-	Data.Width = (int32)props.Width;
-	Data.Height = (int32)props.Height;
-	Data.CursorPosX = 0; // lazy way of declaring might cause problems later
-	Data.CursorPosY = 0;
+	bShouldWindowClose = false;
 
 	// Creates GLFW window
-	NativeWindow = glfwCreateWindow(Data.Width, Data.Height, Data.Title.c_str(), nullptr, nullptr);
+	NativeWindow = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
 	glfwMakeContextCurrent(NativeWindow);
 
 	// Loads GLAD
@@ -29,6 +24,14 @@ Window::Window(const WindowProps& props)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glDepthFunc(GL_LESS);
+
+	Data.CloseHandle = std::bind(&Window::OnWindowCloseEvent, this);
+	Data.FocusHandle = std::bind(&Window::OnWindowInFocusEvent, this, std::placeholders::_1);
+	Data.InputHandle = std::bind(&Window::OnInputEvent, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	Data.MouseOffsetHandle = std::bind(&Window::OnMouseOffsetEvent, this, std::placeholders::_1, std::placeholders::_2);
+	Data.ResizeHandle = std::bind(&Window::OnWindowResizeEvent, this, std::placeholders::_1, std::placeholders::_2);
+	Data.ScrollHandle = std::bind(&Window::OnMouseScrollEvent, this, std::placeholders::_1);
+	Data.TextHandle = std::bind(&Window::OnTextInputEvent, this, std::placeholders::_1);
 
 	// Sets event-relative data
 	glfwSetWindowUserPointer(NativeWindow, &Data);
@@ -108,7 +111,7 @@ Window::Window(const WindowProps& props)
 				break;
 			}
 
-			data->InputHandle(EKeyType(key+400), inputAction, (uint32)mods);
+			data->InputHandle(EKeyType(button+400), inputAction, (uint32)mods);
 		});
 	}
 
@@ -118,7 +121,7 @@ Window::Window(const WindowProps& props)
 		glfwSetCharCallback(NativeWindow, [](GLFWwindow* window, uint32 codepoint) {
 			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
-			data->TextHandle(char(codepoint));
+			data->TextHandle((char)codepoint);
 		});
 	}
 
@@ -155,5 +158,50 @@ void Window::OnUpdate(float deltaTime)
 	glfwSwapBuffers(NativeWindow);
 
 	RenderUtilities::Clear();
-	RenderUtilities::SetClearColor(glm::vec4(0.1));
+	RenderUtilities::SetClearColor(glm::vec4(0.1f));
+}
+
+void Window::FixAspectRatio(uint32 width, uint32 height)
+{
+	glfwSetWindowAspectRatio(NativeWindow, width, height);
+}
+
+void Window::OnWindowResizeEvent(uint32 width, uint32 height)
+{
+	Width = width;
+	Height = height;
+
+	RenderUtilities::SetViewport(Width, Height);
+}
+
+void Window::OnWindowCloseEvent()
+{
+	bShouldWindowClose = true;
+}
+
+void Window::OnWindowInFocusEvent(bool bGainedFocus)
+{
+
+}
+
+void Window::OnTextInputEvent(char text)
+{
+	LOG("{}", text);
+}
+
+void Window::OnInputEvent(EKeyType key, EInputAction inputAction, uint32 modKeys)
+{
+	InputSubsystem::ProcessKey(key, inputAction, modKeys);
+}
+
+void Window::OnMouseScrollEvent(float offset)
+{
+	// TODO: add mouse scroll input 
+}
+
+void Window::OnMouseOffsetEvent(float xpos, float ypos)
+{
+	InputSubsystem::ProcessMouse(xpos - MousePositionX, ypos - MousePositionY);
+	MousePositionX = xpos;
+	MousePositionY = ypos;
 }

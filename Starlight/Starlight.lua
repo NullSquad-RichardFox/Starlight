@@ -7,9 +7,6 @@ project "Starlight"
     targetdir ("Binaries/" .. outputdir)
     objdir ("Intermediate/" .. outputdir)
 
-    pchheader("pcch.h")
-    pchsource("%{wks.location}/Starlight/Source/Starlight/pcch.cpp")
-
     files 
     {
         "Source/**.cpp",
@@ -22,13 +19,17 @@ project "Starlight"
         "Source/Starlight",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.msdf_atlas_gen}",
+        "%{IncludeDir.msdfgen}"
     }
 
     links
     {
         "GLFW",
-        "Glad"
+        "Glad",
+        "msdf-atlas-gen"
     }
 
     flags

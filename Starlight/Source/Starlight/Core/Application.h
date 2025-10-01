@@ -1,7 +1,10 @@
 #pragma once
 
+#include "Base.h"
+
 
 class Window;
+class Layer;
 
 class Application
 {
@@ -12,9 +15,11 @@ public:
 	void Shutdown();
 	
 	void Run();
+	void AddLayer(const std::shared_ptr<Layer>& layer);
 
 private:
 	inline static Application* sAppInstance = nullptr;
 
 	std::shared_ptr<Window> MainWindow;
+	std::vector<std::shared_ptr<Layer>> Layers;
 };

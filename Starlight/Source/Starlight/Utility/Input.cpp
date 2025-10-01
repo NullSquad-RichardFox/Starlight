@@ -1,26 +1,49 @@
-#include "pcch.h"
 #include "Input.h"
 
 
-void InputHandler::BindKey(EKeyType key, std::function<void()> callback, EInputAction InputAction = EInputAction::Triggered, uint32 modKeys = 0)
+void InputSubsystem::Initialize()
 {
-    InputAction action;
+    ASSERT(sInputSubsystem == nullptr, "Input subsystem was already initialized!");
+    sInputSubsystem = new InputSubsystem();
+}
+
+void InputSubsystem::Shutdown()
+{
+    delete sInputSubsystem;
+    sInputSubsystem = nullptr;
+}
+
+void InputSubsystem::BindKey_Int(EKeyType key, std::function<void()> callback, EInputAction inputAction, uint32 modKeys)
+{
+    InputBinding action;
     action.Key = key;
     action.InputAction = inputAction;
     action.ModKeys = modKeys;
 
-    BoundKeys[action] = callback;
+    BoundKeys.push_back(action);
+    BoundCallbacks.push_back(callback);
 }
 
-void InputHandler::ProcessKey(EKeyType key, EInputAction inputAction, uint32 modKeys)
+void InputSubsystem::BindMouse_Int(std::function<void(glm::vec2)> callback)
 {
-    for (const auto& [action, callback] : BoundKeys)
+    MouseCallbacks.push_back(callback);
+}
+
+void InputSubsystem::ProcessKey_Int(EKeyType key, EInputAction inputAction, uint32 modKeys)
+{
+    ASSERT(BoundKeys.size() == BoundCallbacks.size(), "Array size mismatch!");
+
+    for (uint32 i = 0; i < BoundKeys.size(); i++)
     {
-        if (action.Key == key && 
-            action.InputAction == inputAction && 
-            ((action.ModKeys & modKeys) == modKeys)) 
+        if (BoundKeys[i].Key == key && BoundKeys[i].InputAction == inputAction && (BoundKeys[i].ModKeys & modKeys) == modKeys)
         {
-            callback();
-        }  
+            BoundCallbacks[i]();
+        }
     }
+}
+
+void InputSubsystem::ProcessMouse_Int(float xpos, float ypos)
+{
+    for (const auto& callback : MouseCallbacks)
+        callback(glm::vec2(xpos, ypos));
 }

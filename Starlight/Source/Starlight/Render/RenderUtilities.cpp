@@ -1,5 +1,5 @@
-#include "pcch.h"
 #include "RenderUtilities.h"
+#include "VertexArray.h"
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -27,7 +27,7 @@ void RenderUtilities::SetClearColor(glm::vec4 inColor)
 
 void RenderUtilities::DrawElements(const std::shared_ptr<VertexArray>& vertexArray)
 {
-	glDrawElements(GL_TRIANGLES, 0, GL_UNSIGNED_INT, 0); // add vertexArray count 
+	glDrawElements(GL_TRIANGLES, vertexArray->GetIndexCount(), GL_UNSIGNED_INT, 0);
 }
 
 void RenderUtilities::SetViewport(int32 width, int32 height)

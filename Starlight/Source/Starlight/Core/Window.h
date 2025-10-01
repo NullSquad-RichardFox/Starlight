@@ -1,19 +1,22 @@
 #pragma once
 
+#include "Base.h"
+#include "Utility/Input.h"
+
 
 struct GLFWwindow;
 
 struct WindowProps
 {
-	uint32 Width = 600;
-	uint32 Height = 800;
+	uint32 Width = 960;
+	uint32 Height = 540;
 	std::string Title = "Starlight";
 	void* Icon = nullptr;
 
 	bool bWindowResizeEventActive = true;
 	bool bWindowCloseEventActive = true;
 	bool bKeyInputEventActive = false;
-	bool bTextInputEventActive = false;
+	bool bTextInputEventActive = true;
 	bool bMouseScrollEventActive = false;
 	bool bWindowInFocusEventActive = false;
 	bool bRelativeMouseOffsetEventActive = false;
@@ -26,6 +29,9 @@ public:
 	~Window();
 
 	virtual void OnUpdate(float deltaTime);
+
+	void FixAspectRatio(uint32 width, uint32 height);
+	bool IsWindowClosed() const { return bShouldWindowClose; }
 
 private:
 	struct WindowData
@@ -50,4 +56,12 @@ private:
 
 	GLFWwindow* NativeWindow;
 	WindowData Data;
+
+	uint32 Width;
+	uint32 Height;
+
+	float MousePositionX;
+	float MousePositionY;
+
+	bool bShouldWindowClose;
 };

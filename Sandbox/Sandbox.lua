@@ -19,14 +19,15 @@ project "Sandbox"
         "%{wks.location}/Starlight/Source",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.msdf_atlas_gen}",
+        "%{IncludeDir.msdfgen}"
     }
 
     links 
     {
-        "Starlight",
-        "GLFW",
-        "Glad"
+        "Starlight"
     }
 
     flags

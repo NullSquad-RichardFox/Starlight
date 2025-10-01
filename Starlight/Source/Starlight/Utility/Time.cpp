@@ -1,4 +1,3 @@
-#include "pcch.h"
 #include "Time.h"
 
 #include "GLFW/glfw3.h"
@@ -6,7 +5,7 @@
 
 void Time::Initialize()
 {
-	ASSERT(sTimeInstance == nullptr, "UTime already initialized!");
+	ASSERT(sTimeInstance == nullptr, "Time was already initialized!");
 	sTimeInstance = new Time();
 	sTimeInstance->TimeLastFrame = (float)glfwGetTime();
 }

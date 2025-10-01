@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Base.h"
+
 
 class Time;
 
@@ -38,8 +40,6 @@ private:
 	float TimeLastFrame;
 };
 
-#define StartTimedSegment() { std::unique_ptr<TimerType> __timer##__LINE__ = std::make_unique<TimerType>(nullptr);
-
-#define StartTimedSegment(duration) { std::unique_ptr<TimerType> __timer##__LINE__ = std::make_unique<TimerType>(duration);
-
-#define EndTimedSegement() }
+#define START_TIMED_SEGMENT() { std::unique_ptr<TimerType> __timer##__LINE__ = std::make_unique<TimerType>(nullptr);
+#define START_TIMED_SEGMENT(duration) { std::unique_ptr<TimerType> __timer##__LINE__ = std::make_unique<TimerType>(duration);
+#define END_TIMED_SEGMENT() }
