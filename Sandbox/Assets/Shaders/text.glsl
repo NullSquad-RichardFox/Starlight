@@ -1,4 +1,3 @@
-R"(
 #type vertex
 #version 450 core
 
@@ -48,6 +47,5 @@ void main()
     float sd = median(msd.x, msd.y, msd.z);
     float screenPxDistance = screenPxRange()*(sd - 0.5);
     float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
-    albedo = vec4(vColor.rgb, opacity * vColor.w);
-}  
-)"
+    albedo = vec4(vColor.rgb, vColor.w * opacity);
+}

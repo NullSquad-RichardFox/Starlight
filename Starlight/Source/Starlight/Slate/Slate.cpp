@@ -6,7 +6,7 @@ Slate::Slate()
 {
 	bStatic = false;
 	SlateTexture = nullptr;
-	SlateID = std::numeric_limits<uint32>::max();
+	SlateID = FUUID();
 	Color = glm::vec4(1.0f);
 }
 
@@ -24,9 +24,21 @@ Slate* Slate::SetPosition(glm::vec2 position)
 	return this;
 }
 
+Slate* Slate::SetPosition(float x, float y)
+{
+	Position = glm::vec2(x, y);
+	return this;
+}
+
 Slate* Slate::SetSize(glm::vec2 size)
 {
 	Size = size;
+	return this;
+}
+
+Slate* Slate::SetSize(float x, float y)
+{
+	Size = glm::vec2(x, y);
 	return this;
 }
 
@@ -36,9 +48,21 @@ Slate* Slate::SetColor(glm::vec4 color)
 	return this;
 }
 
+Slate* Slate::SetColor(float r, float g, float b, float a)
+{
+	Color = glm::vec4(r, g, b, a);
+	return this;
+}
+
 Slate* Slate::SetTexture(const std::shared_ptr<Texture>& texture)
 {
 	SlateTexture = texture;
+	return this;
+}
+
+Slate* Slate::SetTexture(const std::string& textureSrc)
+{
+	SlateTexture = std::make_shared<Texture>(textureSrc);
 	return this;
 }
 
@@ -54,7 +78,7 @@ Slate* Slate::SetIsStatic(bool bIsStatic)
 	return this;
 }
 
-void Slate::Draw(SlateGeometry& boxGeometry, SlateGeometry textGeometry)
+void Slate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 {
 	for (const auto& slate : Children)
 	{
@@ -116,5 +140,5 @@ void Slate::Draw(SlateGeometry& boxGeometry, SlateGeometry textGeometry)
 	boxVertexData.push_back(Color.w);
 	boxVertexData.push_back(SlateTexture ? 1.0f : -1.0f);
 
-	SlateID = boxGeometry.AppendGeometry(boxVertexData, SlateTexture, SlateID, bStatic);
+	boxGeometry.AppendGeometry(boxVertexData, SlateTexture, SlateID, bStatic);
 }

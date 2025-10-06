@@ -11,7 +11,7 @@ Texture::Texture(const std::string& filePath)
 	stbi_set_flip_vertically_on_load(1);
 
 	unsigned char* textureData = stbi_load(filePath.c_str(), &Width, &Height, &Channels, 4);
-	ASSERT(textureData, "ITexture failed to load!");
+	ASSERT(textureData, "Texture failed to load!");
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &TextureID);
 	glTextureStorage2D(TextureID, 1, GL_RGBA8, Width, Height);
@@ -27,7 +27,7 @@ Texture::Texture(const std::string& filePath)
 	stbi_image_free(textureData);
 }
 
-Texture::Texture(void* data, int32 width, int32 height, int32 format)
+Texture::Texture(const void* data, int32 width, int32 height, int32 format)
 	:TextureID(0), Width(width), Height(height), Channels(format)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &TextureID);

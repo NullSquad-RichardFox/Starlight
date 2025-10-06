@@ -50,8 +50,6 @@ void Application::Run()
 		float deltaTime;
 		Time::OnUpdate(deltaTime);
 
-		LOG("FPS: {}", 1.0f / deltaTime);
-
 		MainWindow->OnUpdate(deltaTime);
 
 		if (MainWindow->IsWindowClosed())

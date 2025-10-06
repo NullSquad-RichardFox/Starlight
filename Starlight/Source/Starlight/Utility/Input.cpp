@@ -1,6 +1,5 @@
 #include "Input.h"
 
-
 void InputSubsystem::Initialize()
 {
     ASSERT(sInputSubsystem == nullptr, "Input subsystem was already initialized!");
@@ -44,6 +43,8 @@ void InputSubsystem::ProcessKey_Int(EKeyType key, EInputAction inputAction, uint
 
 void InputSubsystem::ProcessMouse_Int(float xpos, float ypos)
 {
+    MousePosition += glm::vec2(xpos, ypos);
+
     for (const auto& callback : MouseCallbacks)
         callback(glm::vec2(xpos, ypos));
 }

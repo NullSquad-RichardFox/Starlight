@@ -17,6 +17,7 @@ project "Sandbox"
     {
         "Source",
         "%{wks.location}/Starlight/Source",
+        "%{wks.location}/Starlight/Source/Starlight",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.glm}",
@@ -39,3 +40,6 @@ project "Sandbox"
     {
         "4172"
     }
+
+    filter "configurations:Debug"
+        defines { "CF_DEBUG" }

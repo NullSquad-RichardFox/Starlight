@@ -15,11 +15,11 @@ struct WindowProps
 
 	bool bWindowResizeEventActive = true;
 	bool bWindowCloseEventActive = true;
-	bool bKeyInputEventActive = false;
+	bool bKeyInputEventActive = true;
 	bool bTextInputEventActive = true;
 	bool bMouseScrollEventActive = false;
 	bool bWindowInFocusEventActive = false;
-	bool bRelativeMouseOffsetEventActive = false;
+	bool bRelativeMouseOffsetEventActive = true;
 };
 
 class Window

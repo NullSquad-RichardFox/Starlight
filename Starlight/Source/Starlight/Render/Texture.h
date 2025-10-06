@@ -7,7 +7,7 @@ class Texture
 {
 public:
 	Texture(const std::string& filePath);
-	Texture(void* data, int32 width, int32 height, int32 format);
+	Texture(const void* data, int32 width, int32 height, int32 format);
 	~Texture();
 
 	void Bind(uint32 slot = 0U);

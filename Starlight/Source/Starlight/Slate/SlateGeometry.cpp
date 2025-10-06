@@ -15,14 +15,14 @@ SlateGeometry::SlateGeometry(uint32 maxTextureCount, const std::shared_ptr<Buffe
 	CurrentTextureCount = 0;
 }
 
-uint32 SlateGeometry::AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, uint32 slateID, bool bStatic)
+void SlateGeometry::AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, FUUID slateID, bool bStatic)
 {
 	ASSERT(DefaultLayout && MaxTexureCount, "Slate geometry was constructed incorectly, do not use default constructor!");
 
 	// First draw call
-	if (slateID == std::numeric_limits<uint32>::max())
+	if (SlateGeomertyRegistry.find(slateID) == SlateGeomertyRegistry.end())
 	{
-		if (!vertexData.size()) return slateID;
+		if (!vertexData.size()) return;
 
 		ASSERT(vertexData.size() % DefaultLayout->GetSize() == 0, "Vertex data does not match the buffer layout!");
 
@@ -51,23 +51,25 @@ uint32 SlateGeometry::AppendGeometry(const std::vector<float>& vertexData, const
 			}
 		}
 
-		return offset;
+		SlateGeomertyRegistry[slateID] = offset;
+		return;
 	}
 
 	// Subsequent draw calls
 	
 	// Static slates cannot change form, so we use old data
-	if (bStatic) return slateID;
+	if (bStatic) return;
 
 	for (uint32 i = 0; i < vertexData.size(); i++)
 	{
-		if (VertexData[slateID + i] == vertexData[i])
+		// Skip texture ID
+		if (i % 10 == 9) continue;
+
+		if (VertexData[SlateGeomertyRegistry[slateID] + i] == vertexData[i])
 			continue;
 
-		VertexData[slateID + i] = vertexData[i];
+		VertexData[SlateGeomertyRegistry[slateID] + i] = vertexData[i];
 	}
-
-	return slateID;
 }
 
 void SlateGeometry::Clear()

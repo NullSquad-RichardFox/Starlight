@@ -10,9 +10,9 @@ public:
 	FUUID(uint64_t uuid);
 	FUUID(const FUUID&) = default;
 
-	operator uint64_t() const { return UUID; }
+	operator uint64_t() const { return ID; }
 private:
-	uint64_t UUID;
+	uint64_t ID;
 };
 
 namespace std {

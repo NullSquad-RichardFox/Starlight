@@ -26,13 +26,8 @@ Renderer::Renderer()
 	DefaultCamera = std::make_shared<Camera>(1920.0f / 1080.0f, 1.f);
 	DefaultFont = std::make_shared<Font>("Assets/Fonts/arial.ttf");
 
-	TextShader = std::make_shared<Shader>(std::string(
-#include "../Assets/Shaders/text.glsl"
-	));
-
-	BoxShader = std::make_shared<Shader>(std::string(
-#include "../Assets/Shaders/box.glsl"
-	));
+	TextShader = std::make_shared<Shader>("Assets/Shaders/text.glsl");
+	BoxShader = std::make_shared<Shader>("Assets/Shaders/box.glsl");
 
 	BufferLayout textLayout = {
 		{ EShaderDataType::Float3, "aPosition" },
@@ -78,7 +73,7 @@ void Renderer::FlushGeometry(const SlateGeometry& geometry, const std::shared_pt
 
 		std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
 		vArray->BindBufferLayout(DefaultBufferLayout);
-		vArray->AddVertexData(geometry.GetVertexData().data() + offset, flushPoint);
+		vArray->AddVertexData(geometry.GetVertexData().data() + offset, flushPoint - offset);
 
 		shader->Bind();
 		shader->SetMat4("uViewProjMat", DefaultCamera->GetViewProjMat());
@@ -96,7 +91,7 @@ void Renderer::FlushGeometry(const SlateGeometry& geometry, const std::shared_pt
 
 	std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
 	vArray->BindBufferLayout(DefaultBufferLayout);
-	vArray->AddVertexData(geometry.GetVertexData().data() + offset, geometry.GetVertexData().size());
+	vArray->AddVertexData(geometry.GetVertexData().data() + offset, geometry.GetVertexData().size() - offset);
 
 	shader->Bind();
 	shader->SetMat4("uViewProjMat", DefaultCamera->GetViewProjMat());

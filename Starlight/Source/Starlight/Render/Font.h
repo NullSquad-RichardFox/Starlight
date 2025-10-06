@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base.h"
+
 #undef INFINITE
 #include "msdf-atlas-gen/msdf-atlas-gen.h"
 

@@ -10,7 +10,9 @@ Window::Window(const WindowProps& props)
 	bShouldWindowClose = false;
 
 	// Creates GLFW window
-	NativeWindow = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
+	Width = props.Width;
+	Height = props.Height;
+	NativeWindow = glfwCreateWindow(Width, Height, props.Title.c_str(), nullptr, nullptr);
 	glfwMakeContextCurrent(NativeWindow);
 
 	// Loads GLAD
@@ -201,6 +203,10 @@ void Window::OnMouseScrollEvent(float offset)
 
 void Window::OnMouseOffsetEvent(float xpos, float ypos)
 {
+	xpos = xpos / (float)Width * 1920.f;
+	ypos = ypos / (float)Height * 1080.f;
+	ypos = 1080.f - ypos;
+
 	InputSubsystem::ProcessMouse(xpos - MousePositionX, ypos - MousePositionY);
 	MousePositionX = xpos;
 	MousePositionY = ypos;

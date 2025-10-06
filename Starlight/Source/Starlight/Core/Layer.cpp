@@ -1,13 +1,13 @@
 #include "Layer.h"
-#include "Slate/Slate.h"
+#include "Slate/Overlay.h"
 
 
 Layer::Layer()
 {
-	Root = std::make_shared<Slate>();
+	Root = std::make_shared<Overlay>();
 }
 
-void Layer::Draw(SlateGeometry& boxGeometry, SlateGeometry textGeometry)
+void Layer::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 {
 	Root->Draw(boxGeometry, textGeometry);
 }

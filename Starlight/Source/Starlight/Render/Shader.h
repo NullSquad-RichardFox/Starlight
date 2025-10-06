@@ -9,7 +9,6 @@ class Shader
 {
 public:
 	Shader(const std::filesystem::path& shaderPath);
-	explicit Shader(const std::string& shaderSrc);
 	Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
 	~Shader();
 

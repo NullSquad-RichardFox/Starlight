@@ -12,7 +12,7 @@ public:
 	SlateGeometry();
 	SlateGeometry(uint32 maxTextureCount, const std::shared_ptr<BufferLayout>& layout);
 
-	uint32 AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, uint32 slateID, bool bStatic = false);
+	void AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, FUUID slateID, bool bStatic = false);
 	void Clear();
 
 	const std::vector<float>& GetVertexData() const { return VertexData; }
@@ -27,4 +27,5 @@ private:
 	uint32 MaxTexureCount;
 	std::shared_ptr<BufferLayout> DefaultLayout;
 	uint32 CurrentTextureCount;
+	std::unordered_map<FUUID, uint32> SlateGeomertyRegistry;
 };

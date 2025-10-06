@@ -173,10 +173,12 @@ public:
 	static void Shutdown();
 
 	static void BindKey(EKeyType key, std::function<void()> callback, EInputAction inputAction = EInputAction::Triggered, uint32 modKeys = 0) { if (sInputSubsystem) sInputSubsystem->BindKey_Int(key, callback, inputAction, modKeys); }
-	static void BindMouse(std::function<void(glm::vec2)> callback) { if (sInputSubsystem) sInputSubsystem->BindMouse(callback); }
+	static void BindMouse(std::function<void(glm::vec2)> callback) { if (sInputSubsystem) sInputSubsystem->BindMouse_Int(callback); }
 	
 	static void ProcessKey(EKeyType key, EInputAction inputAction, uint32 modKeys) { if (sInputSubsystem) sInputSubsystem->ProcessKey_Int(key, inputAction, modKeys); }
 	static void ProcessMouse(float xpos, float ypos) { if (sInputSubsystem) sInputSubsystem->ProcessMouse_Int(xpos, ypos); }
+
+	static glm::vec2 GetMousePos() { return sInputSubsystem ? sInputSubsystem->MousePosition : glm::vec2(0.0f); }
 
 private:
 	void BindKey_Int(EKeyType key, std::function<void()> callback, EInputAction inputAction, uint32 modKeys);
@@ -189,4 +191,6 @@ private:
     std::vector<InputBinding> BoundKeys;
     std::vector<std::function<void()>> BoundCallbacks;
 	std::vector<std::function<void(glm::vec2)>> MouseCallbacks;
+
+	glm::vec2 MousePosition;
 };

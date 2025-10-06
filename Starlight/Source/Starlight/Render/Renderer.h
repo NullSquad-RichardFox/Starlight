@@ -23,7 +23,9 @@ public:
 
 	inline static uint32 GetMaxTextureCount() { return sRendererInstance ? sRendererInstance->MaxTextureCount : 0; }
 	inline static const std::shared_ptr<BufferLayout>& GetBufferLayout() { return sRendererInstance ? sRendererInstance->DefaultBufferLayout : nullptr; }
-	inline static const std::shared_ptr<Font>& GetDefaultFont() { return sRendererInstance ? sRendererInstance->DefaultFont : nullptr; }
+	const std::shared_ptr<Font>& GetDefaultFont() { return DefaultFont; }
+
+	inline static Renderer* GetRenderer() { return sRendererInstance; }
 
 private:
 	Renderer();

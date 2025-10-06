@@ -1,4 +1,3 @@
-R"(
 #type vertex
 #version 450 core
 
@@ -43,5 +42,4 @@ void main()
         vec4 tex = texture(uTextures[int(vTexID)], vTexCoord);
         albedo = vec4(tex.rgb, tex.w * vColor.w);
     }
-}  
-)"
+} 

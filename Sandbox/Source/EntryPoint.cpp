@@ -1,4 +1,7 @@
 #include "Starlight/Starlight.h"
+#include "Starlight/Slate/TextSlate.h"
+#include "Starlight/Slate/Overlay.h"
+#include "Starlight/Slate/ButtonSlate.h"
 
 
 int main()
@@ -16,10 +19,13 @@ int main()
 			->SetZOrder(0)
 			->SetIsStatic(true))
 		->AddChild(
-			NewSlate<Slate>()
-			->SetPosition(glm::vec2(400))
-			->SetSize(glm::vec2(50))
-			->SetColor(glm::vec4(0, 1, 0, 1)));
+			NewSlate<TextSlate>()
+			->SetText("Hello")
+			->SetPosition(glm::vec2(400)))
+		->AddChild(
+			NewSlate<ButtonSlate>()
+			->SetPosition(500, 500)
+			->SetSize(100, 40));
 
 	app.AddLayer(l);
 

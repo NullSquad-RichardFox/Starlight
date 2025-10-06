@@ -12,13 +12,6 @@ Shader::Shader(const std::filesystem::path& shaderPath)
 	CreateProgram(shaderData[GL_VERTEX_SHADER].c_str(), shaderData[GL_FRAGMENT_SHADER].c_str());
 }
 
-Shader::Shader(const std::string& shaderSrc)
-{
-	std::unordered_map<GLuint, std::string> shaderData = ParseShader(shaderSrc);
-
-	CreateProgram(shaderData[GL_VERTEX_SHADER].c_str(), shaderData[GL_FRAGMENT_SHADER].c_str());
-}
-
 Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
 {
 	CreateProgram(vertexSrc.c_str(), fragmentSrc.c_str());

@@ -11,19 +11,33 @@ class Slate
 public:
 	Slate();
 
+	virtual void Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry);
+
 	Slate* AddChild(Slate* slate);
+
 	Slate* SetPosition(glm::vec2 position);
+	Slate* SetPosition(float x, float y);
+
 	Slate* SetSize(glm::vec2 size);
+	Slate* SetSize(float x, float y);
+
 	Slate* SetColor(glm::vec4 color);
+	Slate* SetColor(float r, float g, float b, float a = 1.0f);
+
 	Slate* SetTexture(const std::shared_ptr<Texture>& texture);
+	Slate* SetTexture(const std::string& textureSrc);
+
 	Slate* SetZOrder(float zOrder);
 	Slate* SetIsStatic(bool bIsStatic);
 
-	void Draw(SlateGeometry& boxGeometry, SlateGeometry textGeometry);
+	inline glm::vec2 GetPosition() const { return Position; }
+	inline glm::vec2 GetSize() const { return Size; }
+	inline glm::vec4 GetColor() const { return Color; }
+	inline std::shared_ptr<Texture> GetTexture() const { return SlateTexture; }
+	inline float GetZOrder() const { return ZOrder; }
+	inline bool GetIsStatic() const { return bStatic; }
 
-private:
-	std::vector<std::shared_ptr<Slate>> Children;
-
+protected:
 	glm::vec2 Position;
 	glm::vec2 Size;
 	glm::vec4 Color;
@@ -33,7 +47,10 @@ private:
 	uint32 DataOffset;
 	uint32 DataSize;
 	bool bStatic;
-	uint32 SlateID;
+	FUUID SlateID;
+
+private:
+	std::vector<std::shared_ptr<Slate>> Children;
 };
 
 template<typename T>
