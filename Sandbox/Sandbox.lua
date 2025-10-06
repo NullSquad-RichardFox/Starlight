@@ -17,13 +17,7 @@ project "Sandbox"
     {
         "Source",
         "%{wks.location}/Starlight/Source",
-        "%{wks.location}/Starlight/Source/Starlight",
-        "%{IncludeDir.GLFW}",
-        "%{IncludeDir.Glad}",
-        "%{IncludeDir.glm}",
-        "%{IncludeDir.stb_image}",
-        "%{IncludeDir.msdf_atlas_gen}",
-        "%{IncludeDir.msdfgen}"
+        "%{IncludeDir.glm}"
     }
 
     links 

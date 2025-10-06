@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Base.h"
-#include "Utility/Input.h"
+#include "Starlight/Base.h"
+#include "Starlight/Utility/Input.h"
 
 
 struct GLFWwindow;
@@ -16,7 +16,7 @@ struct WindowProps
 	bool bWindowResizeEventActive = true;
 	bool bWindowCloseEventActive = true;
 	bool bKeyInputEventActive = true;
-	bool bTextInputEventActive = true;
+	bool bTextInputEventActive = false;
 	bool bMouseScrollEventActive = false;
 	bool bWindowInFocusEventActive = false;
 	bool bRelativeMouseOffsetEventActive = true;

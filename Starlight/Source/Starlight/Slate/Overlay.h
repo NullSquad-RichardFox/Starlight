@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Base.h"
-#include "Slate/SlateGeometry.h"
+#include "Starlight/Base.h"
+#include "SlateGeometry.h"
 
 
 class Slate;

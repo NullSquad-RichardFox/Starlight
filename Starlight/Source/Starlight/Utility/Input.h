@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Base.h"
+#include "Starlight/Base.h"
 
 
 enum class EInputAction
@@ -164,6 +164,11 @@ struct InputBinding
     EKeyType Key; 
     EInputAction InputAction; 
     uint32 ModKeys;
+
+	bool operator==(const InputBinding& other)
+	{
+		return Key == other.Key && InputAction == other.InputAction && ModKeys == other.ModKeys;
+	}
 };
 
 class InputSubsystem
@@ -171,6 +176,7 @@ class InputSubsystem
 public:
 	static void Initialize();
 	static void Shutdown();
+	static void OnUpdate(float deltaTime) { if (sInputSubsystem) sInputSubsystem->OnUpdate_Int(deltaTime); }
 
 	static void BindKey(EKeyType key, std::function<void()> callback, EInputAction inputAction = EInputAction::Triggered, uint32 modKeys = 0) { if (sInputSubsystem) sInputSubsystem->BindKey_Int(key, callback, inputAction, modKeys); }
 	static void BindMouse(std::function<void(glm::vec2)> callback) { if (sInputSubsystem) sInputSubsystem->BindMouse_Int(callback); }
@@ -181,6 +187,8 @@ public:
 	static glm::vec2 GetMousePos() { return sInputSubsystem ? sInputSubsystem->MousePosition : glm::vec2(0.0f); }
 
 private:
+	void OnUpdate_Int(float deltaTime);
+
 	void BindKey_Int(EKeyType key, std::function<void()> callback, EInputAction inputAction, uint32 modKeys);
 	void BindMouse_Int(std::function<void(glm::vec2)> callback);
 	void ProcessKey_Int(EKeyType key, EInputAction inputAction, uint32 modKeys);
@@ -189,8 +197,13 @@ private:
 	inline static InputSubsystem* sInputSubsystem = nullptr;
 
     std::vector<InputBinding> BoundKeys;
+	std::vector<InputBinding> ActiveKeys;
+	std::vector<InputBinding> BoundKeysPressed;
+
     std::vector<std::function<void()>> BoundCallbacks;
+	std::vector<std::function<void()>> BoundCallbacksPressed;
 	std::vector<std::function<void(glm::vec2)>> MouseCallbacks;
+
 
 	glm::vec2 MousePosition;
 };

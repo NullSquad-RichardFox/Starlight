@@ -16,7 +16,6 @@ project "Starlight"
     includedirs
     {
         "Source",
-        "Source/Starlight",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.glm}",

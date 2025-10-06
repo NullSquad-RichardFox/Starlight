@@ -1,5 +1,5 @@
 #include "SlateGeometry.h"
-#include "Render/VertexArray.h"
+#include "Starlight/Render/VertexArray.h"
 
 
 SlateGeometry::SlateGeometry()
@@ -15,7 +15,7 @@ SlateGeometry::SlateGeometry(uint32 maxTextureCount, const std::shared_ptr<Buffe
 	CurrentTextureCount = 0;
 }
 
-void SlateGeometry::AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, FUUID slateID, bool bStatic)
+void SlateGeometry::AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, FUUID slateID, bool bStatic, uint32 slateFlags)
 {
 	ASSERT(DefaultLayout && MaxTexureCount, "Slate geometry was constructed incorectly, do not use default constructor!");
 

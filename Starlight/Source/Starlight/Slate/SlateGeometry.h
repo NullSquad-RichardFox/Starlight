@@ -1,10 +1,15 @@
 #pragma once
 
-#include "Base.h"
+#include "Starlight/Base.h"
 
 
 class Texture;
 class BufferLayout;
+
+enum ESlateFlags : uint32
+{
+	SF_None = 0b0000000000000001
+};
 
 class SlateGeometry
 {
@@ -12,7 +17,7 @@ public:
 	SlateGeometry();
 	SlateGeometry(uint32 maxTextureCount, const std::shared_ptr<BufferLayout>& layout);
 
-	void AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, FUUID slateID, bool bStatic = false);
+	void AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, FUUID slateID, bool bStatic = false, uint32 slateFlags = 0);
 	void Clear();
 
 	const std::vector<float>& GetVertexData() const { return VertexData; }

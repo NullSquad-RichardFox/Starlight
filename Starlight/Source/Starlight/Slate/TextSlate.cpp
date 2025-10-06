@@ -1,6 +1,6 @@
 #include "TextSlate.h"
-#include "Render/Renderer.h"
-#include "Render/Font.h"
+#include "Starlight/Render/Renderer.h"
+#include "Starlight/Render/Font.h"
 
 
 TextSlate::TextSlate()

@@ -1,13 +1,18 @@
 #pragma once
 
 
-#include "Base.h"
+#include "Starlight/Base.h"
 
-#include "Core/Application.h"
-#include "Core/Layer.h"
+#include "Starlight/Core/Application.h"
+#include "Starlight/Core/Layer.h"
 
-#include "Render/Renderer.h"
-#include "Render/Texture.h"
-#include "Render/Font.h"
+#include "Starlight/Render/Font.h"
+#include "Starlight/Render/Texture.h"
 
-#include "Slate/Slate.h"
+#include "Starlight/Slate/Slate.h"
+#include "Starlight/Slate/TextSlate.h"
+#include "Starlight/Slate/ButtonSlate.h"
+#include "Starlight/Slate/Overlay.h"
+
+#include "Starlight/Utility/Time.h"
+#include "Starlight/Utility/Input.h"

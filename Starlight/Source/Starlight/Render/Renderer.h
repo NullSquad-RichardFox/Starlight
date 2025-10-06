@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Base.h"
-#include "Slate/SlateGeometry.h"
+#include "Starlight/Base.h"
+#include "Starlight/Slate/SlateGeometry.h"
 
 
 class Shader;

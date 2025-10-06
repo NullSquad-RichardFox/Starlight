@@ -5,8 +5,8 @@
 #include "Texture.h"
 #include "VertexArray.h"
 #include "RenderUtilities.h"
-#include "Core/Layer.h"
-#include "Slate/SlateGeometry.h"
+#include "Starlight/Core/Layer.h"
+#include "Starlight/Slate/SlateGeometry.h"
 
 
 void Renderer::Intialize()

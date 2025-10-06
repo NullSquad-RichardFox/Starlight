@@ -1,9 +1,9 @@
 #include "Application.h"
 #include "Window.h"
-#include "Utility/Time.h"
-#include "Utility/Input.h"
-#include "Render/RenderUtilities.h"
-#include "Render/Renderer.h"
+#include "Starlight/Utility/Time.h"
+#include "Starlight/Utility/Input.h"
+#include "Starlight/Render/RenderUtilities.h"
+#include "Starlight/Render/Renderer.h"
 
 #include "GLFW/glfw3.h"
 
@@ -49,6 +49,7 @@ void Application::Run()
 	{
 		float deltaTime;
 		Time::OnUpdate(deltaTime);
+		InputSubsystem::OnUpdate(deltaTime);
 
 		MainWindow->OnUpdate(deltaTime);
 
