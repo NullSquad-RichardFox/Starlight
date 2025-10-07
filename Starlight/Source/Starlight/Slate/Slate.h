@@ -11,6 +11,7 @@ class Slate
 public:
 	Slate();
 
+	virtual void OnUpdate(float deltaTime);
 	virtual void Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry);
 
 	Slate* AddChild(Slate* slate);

@@ -61,15 +61,18 @@ void Renderer::FlushGeometry(const SlateGeometry& geometry, const std::shared_pt
 {
 	uint32 offset = 0;
 	uint32 textureOffset = 0;
+	uint32 texturesRendered = 0;
 	for (uint32 i = 0; i < geometry.GetFlushPoints().size(); i++)
 	{
 		uint32 flushPoint = geometry.GetFlushPoints()[i];
 
-		for (uint32 j = 0; j < std::min<uint32>(MaxTextureCount, geometry.GetTextures().size()); j++)
+		uint32 loopTextures = std::min<uint32>(MaxTextureCount, geometry.GetTextures().size() - texturesRendered);
+		for (uint32 j = 0; j < loopTextures; j++)
 		{
 			geometry.GetTextures()[textureOffset]->Bind(j);
 			textureOffset++;
 		}
+		texturesRendered += loopTextures;
 
 		std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
 		vArray->BindBufferLayout(DefaultBufferLayout);
@@ -83,11 +86,13 @@ void Renderer::FlushGeometry(const SlateGeometry& geometry, const std::shared_pt
 		offset = flushPoint;
 	}
 
-	for (uint32 j = 0; j < std::min<uint32>(MaxTextureCount, geometry.GetTextures().size()); j++)
+	uint32 loopTextures = std::min<uint32>(MaxTextureCount, geometry.GetTextures().size() - texturesRendered);
+	for (uint32 j = 0; j < loopTextures; j++)
 	{
 		geometry.GetTextures()[textureOffset]->Bind(j);
 		textureOffset++;
 	}
+	texturesRendered += loopTextures;
 
 	std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
 	vArray->BindBufferLayout(DefaultBufferLayout);

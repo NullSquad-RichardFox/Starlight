@@ -55,8 +55,6 @@ void InputSubsystem::ProcessKey_Int(EKeyType key, EInputAction inputAction, uint
 {
     ASSERT(BoundKeys.size() == BoundCallbacks.size(), "Array size mismatch!");
 
-    LOG("{}", int(inputAction));
-
     for (uint32 i = 0; i < BoundKeys.size(); i++)
     {
         if (BoundKeys[i].Key == key && BoundKeys[i].InputAction == inputAction && (BoundKeys[i].ModKeys & modKeys) == modKeys)

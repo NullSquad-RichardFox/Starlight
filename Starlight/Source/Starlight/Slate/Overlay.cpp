@@ -10,6 +10,12 @@ Overlay* Overlay::AddChild(Slate* slate)
 	return this;
 }
 
+void Overlay::OnUpdate(float deltaTime)
+{
+	for (const auto& slate : Children)
+		slate->OnUpdate(deltaTime);
+}
+
 void Overlay::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 {
 	for (const auto& slate : Children)

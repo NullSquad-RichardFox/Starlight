@@ -78,6 +78,12 @@ Slate* Slate::SetIsStatic(bool bIsStatic)
 	return this;
 }
 
+void Slate::OnUpdate(float deltaTime)
+{
+	for (const auto& slate : Children)
+		slate->OnUpdate(deltaTime);
+}
+
 void Slate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 {
 	for (const auto& slate : Children)

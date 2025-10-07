@@ -1,11 +1,10 @@
 #include "Application.h"
 #include "Window.h"
+#include "Layer.h"
 #include "Starlight/Utility/Time.h"
 #include "Starlight/Utility/Input.h"
 #include "Starlight/Render/RenderUtilities.h"
 #include "Starlight/Render/Renderer.h"
-
-#include "GLFW/glfw3.h"
 
 
 Application::Application()
@@ -60,6 +59,9 @@ void Application::Run()
 		}
 
 		Renderer::OnUpdate(deltaTime);
+
+		for (const auto& layer : Layers)
+			layer->OnUpdate(deltaTime);
 
 		for (const auto& layer : Layers)
 			Renderer::RenderLayer(layer);

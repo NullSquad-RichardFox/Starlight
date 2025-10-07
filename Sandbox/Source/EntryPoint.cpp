@@ -7,11 +7,9 @@ int main()
 	Application app;
 	app.Initialize();
 
-	Fighter f;
-
 	auto l = std::make_shared<Layer>();
 	l->GetRootSlate()
-		->AddChild(f.GetSlate().get());
+		->AddChild(NewSlate<Fighter>());
 	
 	app.AddLayer(l);
 	app.Run();

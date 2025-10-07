@@ -1,9 +1,11 @@
 #include "Fighter.h"
+#include "Bullet.h"
 
 
 Fighter::Fighter()
 {
 	MoveSpeed = 500.0f;
+	FireDelay = 0.1f;
 
 	InputSubsystem::BindKey(EKeyType::W, std::bind(&Fighter::MoveUp, this), EInputAction::Pressed);
 	InputSubsystem::BindKey(EKeyType::S, std::bind(&Fighter::MoveDown, this), EInputAction::Pressed);
@@ -11,41 +13,52 @@ Fighter::Fighter()
 	InputSubsystem::BindKey(EKeyType::D, std::bind(&Fighter::MoveRight, this), EInputAction::Pressed);
 	InputSubsystem::BindKey(EKeyType::Space, std::bind(&Fighter::Shoot, this), EInputAction::Pressed);
 
-	FighterSlate = std::make_shared<Slate>();
-	FighterSlate->SetPosition(860, 440);
-	FighterSlate->SetSize(200, 200);
-	FighterSlate->SetTexture("Assets/Images/fighter.png");
+	Position = glm::vec2(860, 440);
+	Size = glm::vec2(200, 200);
+	SlateTexture = std::make_shared<Texture>("Assets/Images/fighter.png");
+}
+
+void Fighter::OnUpdate(float deltaTime)
+{
+	Slate::OnUpdate(deltaTime);
+
+	if (CurrentFireDelay > 0) 
+		CurrentFireDelay -= deltaTime;
 }
 
 void Fighter::MoveUp()
 {
-	glm::vec2 pos = FighterSlate->GetPosition();
+	glm::vec2 pos = Position;
 	pos.y += MoveSpeed * Time::GetDeltaTime();
-	FighterSlate->SetPosition(glm::clamp(pos, glm::vec2(100), glm::vec2(1820, 980) - FighterSlate->GetSize()));
+	Position = glm::clamp(pos, glm::vec2(100), glm::vec2(1820, 980) - Size);
 }
 
 void Fighter::MoveDown()
 {
-	glm::vec2 pos = FighterSlate->GetPosition();
+	glm::vec2 pos = Position;
 	pos.y -= MoveSpeed * Time::GetDeltaTime();
-	FighterSlate->SetPosition(glm::clamp(pos, glm::vec2(100), glm::vec2(1820, 980) - FighterSlate->GetSize()));
+	Position = glm::clamp(pos, glm::vec2(100), glm::vec2(1820, 980) - Size);
 }
 
 void Fighter::MoveLeft()
 {
-	glm::vec2 pos = FighterSlate->GetPosition();
+	glm::vec2 pos = Position;
 	pos.x -= MoveSpeed * Time::GetDeltaTime();
-	FighterSlate->SetPosition(glm::clamp(pos, glm::vec2(100), glm::vec2(1820, 980) - FighterSlate->GetSize()));
+	Position = glm::clamp(pos, glm::vec2(100), glm::vec2(1820, 980) - Size);
 }
 
 void Fighter::MoveRight()
 {
-	glm::vec2 pos = FighterSlate->GetPosition();
+	glm::vec2 pos = Position;
 	pos.x += MoveSpeed * Time::GetDeltaTime();
-	FighterSlate->SetPosition(glm::clamp(pos, glm::vec2(100), glm::vec2(1820, 980) - FighterSlate->GetSize()));
+	Position = glm::clamp(pos, glm::vec2(100), glm::vec2(1820, 980) - Size);
 }
 
 void Fighter::Shoot()
 {
-
+	if (CurrentFireDelay <= 0)
+	{
+		AddChild(NewSlate<Bullet>()->SetPosition(Position + Size / 2.f));
+		CurrentFireDelay = FireDelay;
+	}
 }

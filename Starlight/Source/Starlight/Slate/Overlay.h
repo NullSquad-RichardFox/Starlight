@@ -10,6 +10,8 @@ class Overlay
 {
 public:
 	Overlay* AddChild(Slate* slate);
+
+	virtual void OnUpdate(float deltaTime);
 	void Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry);
 
 private:

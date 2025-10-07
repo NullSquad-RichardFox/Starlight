@@ -3,12 +3,12 @@
 #include "Starlight/Starlight.h"
 
 
-class Slate;
-
-class Fighter
+class Fighter : public Slate
 {
 public:
 	Fighter();
+
+	virtual void OnUpdate(float deltaTime) override;
 
 	void MoveUp();
 	void MoveDown();
@@ -17,10 +17,8 @@ public:
 
 	void Shoot();
 
-	const std::shared_ptr<Slate>& GetSlate() const { return FighterSlate; }
-
 private:
-	std::shared_ptr<Slate> FighterSlate;
-
 	float MoveSpeed;
+	float CurrentFireDelay;
+	float FireDelay;
 };

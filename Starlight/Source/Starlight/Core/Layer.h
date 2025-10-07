@@ -13,6 +13,8 @@ public:
 	Layer();
 	inline const std::shared_ptr<Overlay>& GetRootSlate() const { return Root; }
 
+	virtual void OnUpdate(float deltaTime);
+
 	// Saves the vertex data and textures, but also works with flush as the texture limit cannot be surpassed
 	void Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry);
 
