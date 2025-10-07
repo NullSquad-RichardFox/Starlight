@@ -53,6 +53,8 @@ void Renderer::RenderLayer_Int(const std::shared_ptr<Layer>& layer)
 {
 	layer->Draw(BoxGeometry, TextGeometry);
 
+	LOG("Geometry size - box: {}, text: {}", BoxGeometry.GetVertexData().size(), TextGeometry.GetVertexData().size());
+
 	FlushGeometry(BoxGeometry, BoxShader);
 	FlushGeometry(TextGeometry, TextShader);
 }

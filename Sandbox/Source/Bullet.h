@@ -3,7 +3,7 @@
 #include "Starlight/Starlight.h"
 
 
-class Bullet : public Slate
+class Bullet : public BoxSlate
 {
 public:
 	Bullet();

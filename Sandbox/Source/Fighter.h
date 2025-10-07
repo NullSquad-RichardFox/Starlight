@@ -3,7 +3,7 @@
 #include "Starlight/Starlight.h"
 
 
-class Fighter : public Slate
+class Fighter : public BoxSlate
 {
 public:
 	Fighter();
@@ -18,6 +18,8 @@ public:
 	void Shoot();
 
 private:
+	TextSlate* ChildCounter;
+
 	float MoveSpeed;
 	float CurrentFireDelay;
 	float FireDelay;

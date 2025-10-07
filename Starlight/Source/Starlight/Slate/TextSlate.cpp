@@ -8,6 +8,7 @@ TextSlate::TextSlate()
 	auto render = Renderer::GetRenderer();
 	TextFont = render->GetDefaultFont();
     TextScale = 1.0f;
+	Color = glm::vec4(1.f);
 }
 
 void TextSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
@@ -89,7 +90,37 @@ void TextSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 		textVertexData.push_back(1.0f);
 	}
 
-	textGeometry.AppendGeometry(textVertexData, TextFont->GetTexture(), SlateID, bStatic); 
+	textGeometry.AppendGeometry(textVertexData, TextFont->GetTexture(), GetSlateID(), bStatic);
+}
+
+TextSlate* TextSlate::SetPosition(glm::vec2 position)
+{
+	Position = position;
+	return this;
+}
+
+TextSlate* TextSlate::SetPosition(float x, float y)
+{
+	Position = glm::vec2(x, y);
+	return this;
+}
+
+TextSlate* TextSlate::SetColor(glm::vec4 color)
+{
+	Color = color;
+	return this;
+}
+
+TextSlate* TextSlate::SetColor(float r, float g, float b, float a)
+{
+	Color = glm::vec4(r, g, b, a);
+	return this;
+}
+
+TextSlate* TextSlate::SetZOrder(float zOrder)
+{
+	ZOrder = zOrder;
+	return this;
 }
 
 TextSlate* TextSlate::SetText(const std::string& text)

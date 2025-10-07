@@ -188,7 +188,7 @@ void Window::OnWindowInFocusEvent(bool bGainedFocus)
 
 void Window::OnTextInputEvent(char text)
 {
-
+	LOG("{}", text);
 }
 
 void Window::OnInputEvent(EKeyType key, EInputAction inputAction, uint32 modKeys)

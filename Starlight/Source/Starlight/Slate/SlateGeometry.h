@@ -18,6 +18,8 @@ public:
 	SlateGeometry(uint32 maxTextureCount, const std::shared_ptr<BufferLayout>& layout);
 
 	void AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, FUUID slateID, bool bStatic = false, uint32 slateFlags = 0);
+	void EraseGeometry(FUUID slateID);
+	
 	void Clear();
 
 	const std::vector<float>& GetVertexData() const { return VertexData; }

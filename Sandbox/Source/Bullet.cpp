@@ -16,6 +16,6 @@ void Bullet::OnUpdate(float deltaTime)
 	Position.y += MoveSpeed * deltaTime;
 	if (Position.y > 1200)
 	{
-		//RemoveFromParent();
+		RemoveFromParent();
 	}
 }

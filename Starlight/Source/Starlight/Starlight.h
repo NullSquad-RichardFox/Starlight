@@ -10,9 +10,9 @@
 #include "Starlight/Render/Texture.h"
 
 #include "Starlight/Slate/Slate.h"
+#include "Starlight/Slate/BoxSlate.h"
 #include "Starlight/Slate/TextSlate.h"
 #include "Starlight/Slate/ButtonSlate.h"
-#include "Starlight/Slate/Overlay.h"
 
 #include "Starlight/Utility/Time.h"
 #include "Starlight/Utility/Input.h"

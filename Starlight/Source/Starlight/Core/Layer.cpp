@@ -1,10 +1,10 @@
 #include "Layer.h"
-#include "Starlight/Slate/Overlay.h"
+#include "Starlight/Slate/Slate.h"
 
 
 Layer::Layer()
 {
-	Root = std::make_shared<Overlay>();
+	Root = std::make_shared<Slate>();
 }
 
 void Layer::OnUpdate(float deltaTime)

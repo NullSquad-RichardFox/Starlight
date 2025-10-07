@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Starlight/Base.h"
-#include "Slate.h"
+#include "BoxSlate.h"
 
 
-class ButtonSlate : public Slate
+class ButtonSlate : public BoxSlate
 {
 public:
 	ButtonSlate();

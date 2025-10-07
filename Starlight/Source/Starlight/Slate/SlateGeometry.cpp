@@ -72,6 +72,24 @@ void SlateGeometry::AppendGeometry(const std::vector<float>& vertexData, const s
 	}
 }
 
+void SlateGeometry::EraseGeometry(FUUID slateID)
+{
+	if (auto it = SlateGeomertyRegistry.find(slateID); it != SlateGeomertyRegistry.end())
+	{
+		uint32 offset = SlateGeomertyRegistry[slateID];
+		uint32 span = 0;
+		for (const auto& [id, index] : SlateGeomertyRegistry)
+		{
+			if (index >= offset) continue;
+
+			span = std::max(span, index);
+		}
+
+		VertexData.erase(VertexData.begin() + span, VertexData.begin() + offset);
+		SlateGeomertyRegistry.erase(it);
+	}
+}
+
 void SlateGeometry::Clear()
 {
 	VertexData.clear();

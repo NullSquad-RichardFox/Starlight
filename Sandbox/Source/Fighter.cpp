@@ -16,11 +16,16 @@ Fighter::Fighter()
 	Position = glm::vec2(860, 440);
 	Size = glm::vec2(200, 200);
 	SlateTexture = std::make_shared<Texture>("Assets/Images/fighter.png");
+
+	ChildCounter = NewSlate<TextSlate>()->SetPosition(1750, 1040);
+	AddChild(ChildCounter);
 }
 
 void Fighter::OnUpdate(float deltaTime)
 {
 	Slate::OnUpdate(deltaTime);
+
+	ChildCounter->SetText("Children: " + std::to_string(GetChildrenCount() - 1));
 
 	if (CurrentFireDelay > 0) 
 		CurrentFireDelay -= deltaTime;

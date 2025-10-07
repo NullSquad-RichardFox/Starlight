@@ -4,14 +4,14 @@
 #include "Starlight/Slate/SlateGeometry.h"
 
 
-class Overlay;
+class Slate;
 class Texture;
 
 class Layer
 {
 public:
 	Layer();
-	inline const std::shared_ptr<Overlay>& GetRootSlate() const { return Root; }
+	inline const std::shared_ptr<Slate>& GetRootSlate() const { return Root; }
 
 	virtual void OnUpdate(float deltaTime);
 
@@ -19,7 +19,7 @@ public:
 	void Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry);
 
 private:
-	std::shared_ptr<Overlay> Root;
+	std::shared_ptr<Slate> Root;
 	
 };
 
