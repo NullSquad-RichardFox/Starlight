@@ -103,7 +103,31 @@ void Renderer::FlushGeometry(const SlateGeometry& geometry, const std::shared_pt
 
 	//RenderUtilities::DrawElements(vArray);
 
-	std::vector<std::vector<std::pair<void*, uint32>>> data;
 	std::vector<std::shared_ptr<Texture>> textures;
+	std::vector<std::vector<std::pair<void*, uint32>>> data;
 	geometry.GetFlushData(data, textures);
+
+	for (uint32 i = 0; i < data.size(); i++)
+	{
+		// Bind textures
+		for (uint32 j = 0; j < std::min(MaxTextureCount, textures.size() - MaxTextureCount * i); j++)
+		{
+			textures[i * MaxTextureCount + j]->Bind(j);
+		}
+
+		std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
+		vArray->BindBufferLayout(DefaultBufferLayout);
+		
+		for (uint32 j = 0; j < data[i].size(); j++)
+		{
+			vArray->AddVertexData(data[i][j].first, data[i][j].second);
+		}
+
+		vArray->GenerateIndexBuffer();
+
+		shader->Bind();
+		shader->SetMat4("uViewProjMat", DefaultCamera->GetViewProjMat());
+
+		RenderUtilities::DrawElements(vArray);
+	}
 }

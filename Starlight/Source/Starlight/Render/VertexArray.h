@@ -86,6 +86,7 @@ public:
 	~VertexArray();
 
 	void AddVertexData(const float* vertexData, uint32 size);
+	void GenerateIndexBuffer();
 	void BindBufferLayout(const std::shared_ptr<BufferLayout>& bufferLayout);
 
 	uint32 GetIndexCount() const { return IndexCount; }

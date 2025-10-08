@@ -17,13 +17,9 @@ public:
 	SlateGeometry();
 	SlateGeometry(uint32 maxTextureCount, uint32 bufferSize);
 
-	// Needs to be as fast as possible
 	void AppendGeometry(FUUID slateID, const std::vector<float>& data, const std::shared_ptr<Texture>& texture, uint32 slateFlags = 0);
-
-	// Can be slower
 	void EraseGeometry(FUUID slateID);
 
-	// Needs to be fast
 	void GetFlushData(std::vector<std::vector<std::pair<void*, uint32>>>& vData, std::vector<std::shared_ptr<Texture>>& textures) const;
 
 private:

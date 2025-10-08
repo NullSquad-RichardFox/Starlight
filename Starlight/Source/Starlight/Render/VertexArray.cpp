@@ -75,6 +75,8 @@ GLenum Utils::GetShaderDataTypeToOpenGLBaseType(EShaderDataType type)
 
 VertexArray::VertexArray()
 {
+	IndexCount = 0;
+	
 	glCreateVertexArrays(1, &ArrayID);
 	glCreateBuffers(1, &VertexBufferID);
 	glCreateBuffers(1, &IndexBufferID);
@@ -98,7 +100,14 @@ void VertexArray::AddVertexData(const float* vertexData, uint32 size)
 	ASSERT((vCount % 4) == 0, "Vertex data contains incomplete quads!");
 	uint32 qCount = vCount / 4;
 
-	IndexCount = 6 * qCount;
+	IndexCount += 6 * qCount;
+
+	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexData, GL_STATIC_DRAW);
+}
+
+void VertexArray::GenerateIndexBuffer()
+{
 	std::vector<uint32> indices;
 	indices.reserve(IndexCount);
 	for (uint32 i = 0; i < qCount; i++)
@@ -110,9 +119,6 @@ void VertexArray::AddVertexData(const float* vertexData, uint32 size)
 		indices.push_back(3 + 4 * i);
 		indices.push_back(0 + 4 * i);
 	}
-
-	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexData, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount * sizeof(uint32), indices.data(), GL_STATIC_DRAW);
