@@ -122,5 +122,5 @@ void BoxSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 	boxVertexData.push_back(Color.w);
 	boxVertexData.push_back(SlateTexture ? 1.0f : -1.0f);
 
-	boxGeometry.AppendGeometry(boxVertexData, SlateTexture, GetSlateID(), bStatic);
+	boxGeometry.AppendGeometry(GetSlateID(), boxVertexData, SlateTexture, bStatic ? SF_Static : SF_None);
 }

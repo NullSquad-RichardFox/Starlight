@@ -4,19 +4,19 @@
 
 SlateGeometry::SlateGeometry()
 {
-	MaxTexureCount = 0;
+	MaxTextureCount = 0;
 	BufferSize = 0;
-	CellSize = 0
+	CellSize = 0;
 }
 
 SlateGeometry::SlateGeometry(uint32 maxTextureCount, uint32 bufferSize)
 {
-	MaxTexureCount = maxTextureCount;
+	MaxTextureCount = maxTextureCount;
 	BufferSize = bufferSize;
 	CellSize = 4 * BufferSize;
 }
 
-void SlateGeometry::AppendGeometry(FUUID slateID, const std::vector<float>& data, const std::shared_ptr<Texture>& texture, uint32 slateFlags = 0)
+void SlateGeometry::AppendGeometry(FUUID slateID, const std::vector<float>& data, const std::shared_ptr<Texture>& texture, uint32 slateFlags)
 {
 	if (!data.size()) return;
 
@@ -24,7 +24,7 @@ void SlateGeometry::AppendGeometry(FUUID slateID, const std::vector<float>& data
 	if (auto it = SlateIndexRegistry.find(slateID); it != SlateIndexRegistry.end())
 	{
 		// Static data does not change
-		if ((slateFlags & SF_Static) == SF_Static) continue;
+		if ((slateFlags & SF_Static) == SF_Static) return;
 
 		for (uint32 i = 0; i < CellSize; i++)
 		{
@@ -52,7 +52,7 @@ void SlateGeometry::AppendGeometry(FUUID slateID, const std::vector<float>& data
 
 	if (texture)
 	{
-		Textures[index] = texture;
+		Textures.insert({ index, texture });
 	}
 
 	RecacheFlushData();
@@ -65,15 +65,15 @@ void SlateGeometry::EraseGeometry(FUUID slateID)
 	{
 		// We do not clear data only set it to be clear when new data is added
 		FreeSlotIndices.push_back(it->second);
-		if (auto it = Textures.find(it->second); it != Textures.end())
-			Textures.erase(it);
+		if (auto tIt = Textures.find(it->second); tIt != Textures.end())
+			Textures.erase(tIt);
 
 		RecacheFlushData();
 	}
 }
 
 // Needs to be fast
-void SlateGeometry::GetFlushData(std::vector<std::vector<std::pair<void*, uint32>>>& vData, std::vector<Texture>& textures)
+void SlateGeometry::GetFlushData(std::vector<std::vector<std::pair<void*, uint32>>>& vData, std::vector<std::shared_ptr<Texture>>& textures) const
 {
 	vData = CachedFlushData;
 	textures.reserve(Textures.size());

@@ -40,8 +40,8 @@ Renderer::Renderer()
 
 	MaxTextureCount = 32;
 
-	BoxGeometry = SlateGeometry(MaxTextureCount, DefaultBufferLayout);
-	TextGeometry = SlateGeometry(MaxTextureCount, DefaultBufferLayout);
+	BoxGeometry = SlateGeometry(MaxTextureCount, DefaultBufferLayout->GetSize());
+	TextGeometry = SlateGeometry(MaxTextureCount, DefaultBufferLayout->GetSize());
 }
 
 void Renderer::OnUpdate_Int(float deltaTime)
@@ -53,55 +53,57 @@ void Renderer::RenderLayer_Int(const std::shared_ptr<Layer>& layer)
 {
 	layer->Draw(BoxGeometry, TextGeometry);
 
-	LOG("Geometry size - box: {}, text: {}", BoxGeometry.GetVertexData().size(), TextGeometry.GetVertexData().size());
-
 	FlushGeometry(BoxGeometry, BoxShader);
 	FlushGeometry(TextGeometry, TextShader);
 }
 
 void Renderer::FlushGeometry(const SlateGeometry& geometry, const std::shared_ptr<Shader>& shader)
 {
-	uint32 offset = 0;
-	uint32 textureOffset = 0;
-	uint32 texturesRendered = 0;
-	for (uint32 i = 0; i < geometry.GetFlushPoints().size(); i++)
-	{
-		uint32 flushPoint = geometry.GetFlushPoints()[i];
+	//uint32 offset = 0;
+	//uint32 textureOffset = 0;
+	//uint32 texturesRendered = 0;
+	//for (uint32 i = 0; i < geometry.GetFlushPoints().size(); i++)
+	//{
+	//	uint32 flushPoint = geometry.GetFlushPoints()[i];
 
-		uint32 loopTextures = std::min<uint32>(MaxTextureCount, geometry.GetTextures().size() - texturesRendered);
-		for (uint32 j = 0; j < loopTextures; j++)
-		{
-			geometry.GetTextures()[textureOffset]->Bind(j);
-			textureOffset++;
-		}
-		texturesRendered += loopTextures;
+	//	uint32 loopTextures = std::min<uint32>(MaxTextureCount, geometry.GetTextures().size() - texturesRendered);
+	//	for (uint32 j = 0; j < loopTextures; j++)
+	//	{
+	//		geometry.GetTextures()[textureOffset]->Bind(j);
+	//		textureOffset++;
+	//	}
+	//	texturesRendered += loopTextures;
 
-		std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
-		vArray->BindBufferLayout(DefaultBufferLayout);
-		vArray->AddVertexData(geometry.GetVertexData().data() + offset, flushPoint - offset);
+	//	std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
+	//	vArray->BindBufferLayout(DefaultBufferLayout);
+	//	vArray->AddVertexData(geometry.GetVertexData().data() + offset, flushPoint - offset);
 
-		shader->Bind();
-		shader->SetMat4("uViewProjMat", DefaultCamera->GetViewProjMat());
+	//	shader->Bind();
+	//	shader->SetMat4("uViewProjMat", DefaultCamera->GetViewProjMat());
 
-		RenderUtilities::DrawElements(vArray);
+	//	RenderUtilities::DrawElements(vArray);
 
-		offset = flushPoint;
-	}
+	//	offset = flushPoint;
+	//}
 
-	uint32 loopTextures = std::min<uint32>(MaxTextureCount, geometry.GetTextures().size() - texturesRendered);
-	for (uint32 j = 0; j < loopTextures; j++)
-	{
-		geometry.GetTextures()[textureOffset]->Bind(j);
-		textureOffset++;
-	}
-	texturesRendered += loopTextures;
+	//uint32 loopTextures = std::min<uint32>(MaxTextureCount, geometry.GetTextures().size() - texturesRendered);
+	//for (uint32 j = 0; j < loopTextures; j++)
+	//{
+	//	geometry.GetTextures()[textureOffset]->Bind(j);
+	//	textureOffset++;
+	//}
+	//texturesRendered += loopTextures;
 
-	std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
-	vArray->BindBufferLayout(DefaultBufferLayout);
-	vArray->AddVertexData(geometry.GetVertexData().data() + offset, geometry.GetVertexData().size() - offset);
+	//std::shared_ptr<VertexArray> vArray = std::make_shared<VertexArray>();
+	//vArray->BindBufferLayout(DefaultBufferLayout);
+	//vArray->AddVertexData(geometry.GetVertexData().data() + offset, geometry.GetVertexData().size() - offset);
 
-	shader->Bind();
-	shader->SetMat4("uViewProjMat", DefaultCamera->GetViewProjMat());
+	//shader->Bind();
+	//shader->SetMat4("uViewProjMat", DefaultCamera->GetViewProjMat());
 
-	RenderUtilities::DrawElements(vArray);
+	//RenderUtilities::DrawElements(vArray);
+
+	std::vector<std::vector<std::pair<void*, uint32>>> data;
+	std::vector<std::shared_ptr<Texture>> textures;
+	geometry.GetFlushData(data, textures);
 }

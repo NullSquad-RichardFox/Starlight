@@ -90,7 +90,7 @@ void TextSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 		textVertexData.push_back(1.0f);
 	}
 
-	textGeometry.AppendGeometry(textVertexData, TextFont->GetTexture(), GetSlateID(), bStatic);
+	textGeometry.AppendGeometry(GetSlateID(), textVertexData, TextFont->GetTexture(), bStatic ? SF_Static : SF_None);
 }
 
 TextSlate* TextSlate::SetPosition(glm::vec2 position)
