@@ -5,95 +5,116 @@
 SlateGeometry::SlateGeometry()
 {
 	MaxTexureCount = 0;
-	DefaultLayout = nullptr;
+	BufferSize = 0;
+	CellSize = 0
 }
 
-SlateGeometry::SlateGeometry(uint32 maxTextureCount, const std::shared_ptr<BufferLayout>& layout)
+SlateGeometry::SlateGeometry(uint32 maxTextureCount, uint32 bufferSize)
 {
 	MaxTexureCount = maxTextureCount;
-	DefaultLayout = layout;
-	CurrentTextureCount = 0;
+	BufferSize = bufferSize;
+	CellSize = 4 * BufferSize;
 }
 
-void SlateGeometry::AppendGeometry(const std::vector<float>& vertexData, const std::shared_ptr<Texture>& texture, FUUID slateID, bool bStatic, uint32 slateFlags)
+void SlateGeometry::AppendGeometry(FUUID slateID, const std::vector<float>& data, const std::shared_ptr<Texture>& texture, uint32 slateFlags = 0)
 {
-	ASSERT(DefaultLayout && MaxTexureCount, "Slate geometry was constructed incorectly, do not use default constructor!");
+	if (!data.size()) return;
 
-	// First draw call
-	if (SlateGeomertyRegistry.find(slateID) == SlateGeomertyRegistry.end())
+	// Slate already loaded in memory
+	if (auto it = SlateIndexRegistry.find(slateID); it != SlateIndexRegistry.end())
 	{
-		if (!vertexData.size()) return;
+		// Static data does not change
+		if ((slateFlags & SF_Static) == SF_Static) continue;
 
-		ASSERT(vertexData.size() % DefaultLayout->GetSize() == 0, "Vertex data does not match the buffer layout!");
-
-		uint32 offset = VertexData.size();
-		VertexData.reserve(offset + vertexData.size());
-		VertexData.insert(VertexData.end(), vertexData.begin(), vertexData.end());
-
-		if (texture)
+		for (uint32 i = 0; i < CellSize; i++)
 		{
-			Textures.push_back(texture);
-			uint32 bufferSize = DefaultLayout->GetSize();
-			uint32 vCount = vertexData.size() / bufferSize;
-			for (uint32 i = 0; i < vCount; i++)
-			{
-				if (VertexData[offset + bufferSize * i + 9] == 1.0f)
-				{
-					VertexData[offset + bufferSize * i + 9] = CurrentTextureCount;
-				}
-			}
-
-			CurrentTextureCount++;
-			if (CurrentTextureCount == MaxTexureCount)
-			{
-				FlushPoints.push_back(offset);
-				CurrentTextureCount = 0;
-			}
+			VertexDataCache[it->second + i] = data[i];
 		}
-
-		SlateGeomertyRegistry[slateID] = offset;
+	
 		return;
 	}
 
-	// Subsequent draw calls
-	
-	// Static slates cannot change form, so we use old data
-	if (bStatic) return;
-
-	for (uint32 i = 0; i < vertexData.size(); i++)
+	// Add slate to the memory
+	uint32 index;
+	if (FreeSlotIndices.size() == 0)
 	{
-		// Skip texture ID
-		if (i % 10 == 9) continue;
+		uint32 index = VertexDataCache.size();
 
-		if (VertexData[SlateGeomertyRegistry[slateID] + i] == vertexData[i])
-			continue;
-
-		VertexData[SlateGeomertyRegistry[slateID] + i] = vertexData[i];
 	}
+	else
+	{
+		uint32 index = FreeSlotIndices[0];
+		FreeSlotIndices.erase(FreeSlotIndices.begin());
+	}
+
+	VertexDataCache.insert(VertexDataCache.end(), data.begin(), data.end());
+	SlateIndexRegistry[slateID] = index;
+
+	if (texture)
+	{
+		Textures[index] = texture;
+	}
+
+	RecacheFlushData();
 }
 
+// Can be slower
 void SlateGeometry::EraseGeometry(FUUID slateID)
 {
-	if (auto it = SlateGeomertyRegistry.find(slateID); it != SlateGeomertyRegistry.end())
+	if (auto it = SlateIndexRegistry.find(slateID); it != SlateIndexRegistry.end())
 	{
-		uint32 offset = SlateGeomertyRegistry[slateID];
-		uint32 span = 0;
-		for (const auto& [id, index] : SlateGeomertyRegistry)
-		{
-			if (index >= offset) continue;
+		// We do not clear data only set it to be clear when new data is added
+		FreeSlotIndices.push_back(it->second);
+		if (auto it = Textures.find(it->second); it != Textures.end())
+			Textures.erase(it);
 
-			span = std::max(span, index);
-		}
-
-		VertexData.erase(VertexData.begin() + span, VertexData.begin() + offset);
-		SlateGeomertyRegistry.erase(it);
+		RecacheFlushData();
 	}
 }
 
-void SlateGeometry::Clear()
+// Needs to be fast
+void SlateGeometry::GetFlushData(std::vector<std::vector<std::pair<void*, uint32>>>& vData, std::vector<Texture>& textures)
 {
-	VertexData.clear();
-	Textures.clear();
-	FlushPoints.clear();
-	CurrentTextureCount = 0;
+	vData = CachedFlushData;
+	textures.reserve(Textures.size());
+	for (const auto& [id, texture] : Textures)
+		textures.push_back(texture);
+}
+
+void SlateGeometry::RecacheFlushData()
+{
+	CachedFlushData.clear();
+	CachedFlushData.reserve(Textures.size() / MaxTextureCount + 1);
+	
+	uint32 prevIndex = 0; 
+	uint32 currentTextureCount = 0;
+	std::vector<std::pair<void*, uint32>> flushData;
+	
+	// Itter through all data
+	for (uint32 i = 0; i < VertexDataCache.size() / CellSize; i++)
+	{
+		// Handle hole 
+		if (auto it = std::find(FreeSlotIndices.begin(), FreeSlotIndices.end(), i * CellSize); it != FreeSlotIndices.end())
+		{
+			if (prevIndex != 0 && prevIndex + CellSize == i * CellSize)
+			{
+				prevIndex = i * CellSize;
+				continue;
+			}
+
+			flushData.push_back(std::make_pair<void*, uint32>(VertexDataCache.data() + prevIndex, i * CellSize - prevIndex));
+		}
+
+		// Handle textures
+		if (auto it = Textures.find(i * CellSize); it != Textures.end())
+		{
+			currentTextureCount++;
+			if (currentTextureCount == MaxTextureCount)
+			{
+				CachedFlushData.push_back(flushData);
+				flushData.clear();
+				currentTextureCount = 0;
+			}
+		}
+	}
 }
