@@ -6,12 +6,7 @@ int main()
 {
 	Application app;
 	app.Initialize();
-
-	auto l = std::make_shared<Layer>();
-	l->GetRootSlate()
-		->AddChild(NewSlate<Fighter>());
-	
-	app.AddLayer(l);
+	app.AddLayer(std::make_shared<Layer>());
 	app.Run();
 	app.Shutdown();
 }

@@ -11,12 +11,13 @@ class Layer
 {
 public:
 	Layer();
-	inline const std::shared_ptr<Slate>& GetRootSlate() const { return Root; }
-
+	
 	virtual void OnUpdate(float deltaTime);
-
+	
 	// Saves the vertex data and textures, but also works with flush as the texture limit cannot be surpassed
 	void Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry);
+
+	inline const std::shared_ptr<Slate>& GetRootSlate() const { return Root; }
 
 private:
 	std::shared_ptr<Slate> Root;
