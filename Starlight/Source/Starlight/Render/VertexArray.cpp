@@ -78,18 +78,19 @@ VertexArray::VertexArray()
 	IndexCount = 0;
 	
 	glCreateVertexArrays(1, &ArrayID);
-	glCreateBuffers(1, &VertexBufferID);
 	glCreateBuffers(1, &IndexBufferID);
 }
 
 VertexArray::~VertexArray()
 {
+	for (const uint32& id : VertexBufferIDs)
+		glDeleteBuffers(1, &id);
+	
 	glDeleteBuffers(1, &IndexBufferID);
-	glDeleteBuffers(1, &VertexBufferID);
 	glDeleteVertexArrays(1, &ArrayID);
 }
 
-void VertexArray::AddVertexData(const float* vertexData, uint32 size)
+void VertexArray::AddVertexData(const void* vertexData, uint32 size)
 {
 	ASSERT(ArrayLayout != nullptr, "Buffer layout not bound!");
 	ASSERT(ArrayLayout->GetElements().size(), "Bound buffer layout is empty!");
@@ -102,26 +103,11 @@ void VertexArray::AddVertexData(const float* vertexData, uint32 size)
 
 	IndexCount += 6 * qCount;
 
-	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
+	uint32 vBufferID;
+	glCreateBuffers(1, &vBufferID);
+	glBindVertexArray(ArrayID);
+	glBindBuffer(GL_ARRAY_BUFFER, vBufferID);
 	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexData, GL_STATIC_DRAW);
-}
-
-void VertexArray::GenerateIndexBuffer()
-{
-	std::vector<uint32> indices;
-	indices.reserve(IndexCount);
-	for (uint32 i = 0; i < qCount; i++)
-	{
-		indices.push_back(0 + 4 * i);
-		indices.push_back(1 + 4 * i);
-		indices.push_back(2 + 4 * i);
-		indices.push_back(2 + 4 * i);
-		indices.push_back(3 + 4 * i);
-		indices.push_back(0 + 4 * i);
-	}
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount * sizeof(uint32), indices.data(), GL_STATIC_DRAW);
 
 	uint32 index = 0;
 	for (auto& element : *ArrayLayout)
@@ -137,6 +123,31 @@ void VertexArray::GenerateIndexBuffer()
 		);
 		index++;
 	}
+
+	VertexBufferIDs.push_back(vBufferID);
+}
+
+void VertexArray::GenerateIndexBuffer()
+{
+	glBindVertexArray(ArrayID);
+	for (const auto& id : VertexBufferIDs)
+		glBindBuffer(GL_ARRAY_BUFFER, id);
+
+	std::vector<uint32> indices;
+	indices.reserve(IndexCount);
+	for (uint32 i = 0; i < IndexCount / 6; i++)
+	{
+		indices.push_back(0 + 4 * i);
+		indices.push_back(1 + 4 * i);
+		indices.push_back(2 + 4 * i);
+		indices.push_back(2 + 4 * i);
+		indices.push_back(3 + 4 * i);
+		indices.push_back(0 + 4 * i);
+	}
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount * sizeof(uint32), indices.data(), GL_STATIC_DRAW);
+
 }
 
 void VertexArray::BindBufferLayout(const std::shared_ptr<BufferLayout>& bufferLayout)

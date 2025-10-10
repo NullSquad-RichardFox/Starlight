@@ -68,6 +68,7 @@ void BoxSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 	Slate::Draw(boxGeometry, textGeometry);
 
 	std::vector<float> boxVertexData;
+	boxVertexData.reserve(40);
 	glm::vec2 position;
 	position.x = Position.x / 540.0f - 1.7777777f;
 	position.y = Position.y / 540.0f - 1;
@@ -84,7 +85,7 @@ void BoxSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 	boxVertexData.push_back(Color.y);
 	boxVertexData.push_back(Color.z);
 	boxVertexData.push_back(Color.w);
-	boxVertexData.push_back(SlateTexture ? 1.0f : -1.0f);
+	boxVertexData.push_back(-1.0f);
 
 	// Bottom right
 	boxVertexData.push_back(position.x + size.x);
@@ -96,7 +97,7 @@ void BoxSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 	boxVertexData.push_back(Color.y);
 	boxVertexData.push_back(Color.z);
 	boxVertexData.push_back(Color.w);
-	boxVertexData.push_back(SlateTexture ? 1.0f : -1.0f);
+	boxVertexData.push_back(-1.0f);
 
 	// Top right
 	boxVertexData.push_back(position.x + size.x);
@@ -108,7 +109,7 @@ void BoxSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 	boxVertexData.push_back(Color.y);
 	boxVertexData.push_back(Color.z);
 	boxVertexData.push_back(Color.w);
-	boxVertexData.push_back(SlateTexture ? 1.0f : -1.0f);
+	boxVertexData.push_back(-1.0f);
 
 	// Top left
 	boxVertexData.push_back(position.x);
@@ -120,7 +121,7 @@ void BoxSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 	boxVertexData.push_back(Color.y);
 	boxVertexData.push_back(Color.z);
 	boxVertexData.push_back(Color.w);
-	boxVertexData.push_back(SlateTexture ? 1.0f : -1.0f);
+	boxVertexData.push_back(-1.0f);
 
 	boxGeometry.AppendGeometry(GetSlateID(), boxVertexData, SlateTexture, bStatic ? SF_Static : SF_None);
 }

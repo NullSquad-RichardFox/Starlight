@@ -20,19 +20,20 @@ public:
 	void AppendGeometry(FUUID slateID, const std::vector<float>& data, const std::shared_ptr<Texture>& texture, uint32 slateFlags = 0);
 	void EraseGeometry(FUUID slateID);
 
-	void GetFlushData(std::vector<std::vector<std::pair<void*, uint32>>>& vData, std::vector<std::shared_ptr<Texture>>& textures) const;
+	void GetFlushData(std::vector<std::pair<void*, uint32>>& vData, std::vector<std::shared_ptr<Texture>>& textures) const;
 
 private:
 	void RecacheFlushData();
 
 	std::vector<float> VertexDataCache;
+	std::map<uint32, uint32> CellSizes;
 	std::vector<uint32> FreeSlotIndices;
 	std::unordered_map<FUUID, uint32> SlateIndexRegistry;
-	std::map<uint32, std::shared_ptr<Texture>> Textures;
+	std::map<uint32, uint32> TextureRegistry;
+	std::vector<std::shared_ptr<Texture>> TextureStorage;
 
-	std::vector<std::vector<std::pair<void*, uint32>>> CachedFlushData;
+	std::vector<std::pair<void*, uint32>> CachedFlushData;
 
 	uint32 MaxTextureCount = 32;
 	uint32 BufferSize = 10;
-	uint32 CellSize = BufferSize * 4;
 };

@@ -85,7 +85,7 @@ public:
 	VertexArray();
 	~VertexArray();
 
-	void AddVertexData(const float* vertexData, uint32 size);
+	void AddVertexData(const void* vertexData, uint32 size);
 	void GenerateIndexBuffer();
 	void BindBufferLayout(const std::shared_ptr<BufferLayout>& bufferLayout);
 
@@ -94,7 +94,7 @@ public:
 private:
 	std::shared_ptr<BufferLayout> ArrayLayout;
 	uint32 ArrayID;
-	uint32 VertexBufferID;
+	std::vector<uint32> VertexBufferIDs;
 	uint32 IndexBufferID;
 	uint32 IndexCount;
 };

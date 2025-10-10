@@ -52,8 +52,10 @@ void Slate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 	for (const FUUID& id : RemovedChildren)
 	{
 		boxGeometry.EraseGeometry(id);
-		textGeometry.EraseGeometry(id);
+		//textGeometry.EraseGeometry(id);
 	}
+
+	RemovedChildren.clear();
 
 	for (const auto& [id, slate] : Children)
 		slate->Draw(boxGeometry, textGeometry);

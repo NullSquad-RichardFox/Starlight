@@ -16,6 +16,7 @@ void TextSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
     Slate::Draw(boxGeometry, textGeometry);
 
     std::vector<float> textVertexData;
+	textVertexData.reserve(40);
     glm::vec2 position;
 	float renderScale = 0.05f * TextScale;
     position.x = Position.x / 540.0f - 1.7777777f;
@@ -51,7 +52,7 @@ void TextSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 		textVertexData.push_back(Color.y);
 		textVertexData.push_back(Color.z);
 		textVertexData.push_back(Color.w);
-		textVertexData.push_back(1.0f);
+		textVertexData.push_back(-1.0f);
 
 		// Bottom right
 		textVertexData.push_back(maxSize.x);
@@ -63,7 +64,7 @@ void TextSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 		textVertexData.push_back(Color.y);
 		textVertexData.push_back(Color.z);
 		textVertexData.push_back(Color.w);
-		textVertexData.push_back(1.0f);
+		textVertexData.push_back(-1.0f);
 
 		// Top right
 		textVertexData.push_back(maxSize.x);
@@ -75,7 +76,7 @@ void TextSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 		textVertexData.push_back(Color.y);
 		textVertexData.push_back(Color.z);
 		textVertexData.push_back(Color.w);
-		textVertexData.push_back(1.0f);
+		textVertexData.push_back(-1.0f);
 
 		// Top left
 		textVertexData.push_back(minSize.x);
@@ -87,9 +88,9 @@ void TextSlate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 		textVertexData.push_back(Color.y);
 		textVertexData.push_back(Color.z);
 		textVertexData.push_back(Color.w);
-		textVertexData.push_back(1.0f);
+		textVertexData.push_back(-1.0f);
+	
 	}
-
 	textGeometry.AppendGeometry(GetSlateID(), textVertexData, TextFont->GetTexture(), bStatic ? SF_Static : SF_None);
 }
 

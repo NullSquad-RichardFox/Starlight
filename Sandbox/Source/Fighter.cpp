@@ -6,6 +6,7 @@ Fighter::Fighter()
 {
 	MoveSpeed = 500.0f;
 	FireDelay = 0.1f;
+	CurrentFireDelay = 0;
 
 	InputSubsystem::BindKey(EKeyType::W, std::bind(&Fighter::MoveUp, this), EInputAction::Pressed);
 	InputSubsystem::BindKey(EKeyType::S, std::bind(&Fighter::MoveDown, this), EInputAction::Pressed);
