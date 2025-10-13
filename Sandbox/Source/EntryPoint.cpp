@@ -1,12 +1,21 @@
+#include "GameLayer.h"
 #include "Starlight/Starlight.h"
-#include "Fighter.h"
+#include "Entities/Fighter.h"
+#include "Physics.h"
 
 
 int main()
 {
+	srand(time({}));
+
 	Application app;
+	
 	app.Initialize();
-	app.AddLayer(std::make_shared<Layer>());
+	PhysicsEngine::Initialize();
+
+	app.AddLayer(std::make_shared<GameLayer>());
 	app.Run();
+	
+	PhysicsEngine::Shutdown();
 	app.Shutdown();
 }

@@ -131,6 +131,12 @@ void SlateGeometry::EraseGeometry(FUUID slateID)
 			}
 		}
 
+		// Resets values in cache
+		for (uint32 i = 0; i < CellSizes[it->second]; i++)
+		{
+			VertexDataCache[it->second + i] = 0;
+		}
+
 		RecacheFlushData();
 		SlateIndexRegistry.erase(it);
 	}

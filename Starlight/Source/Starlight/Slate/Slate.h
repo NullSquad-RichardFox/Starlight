@@ -8,6 +8,7 @@ class Slate
 {
 public:
 	Slate();
+	virtual ~Slate();
 
 	virtual void OnUpdate(float deltaTime);
 	virtual void Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry);

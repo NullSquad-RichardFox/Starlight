@@ -7,10 +7,13 @@ Slate::Slate()
 	bStatic = false;
 }
 
+Slate::~Slate()
+{
+}
+
 Slate* Slate::AddChild(Slate* slate)
 {
-	auto s = std::make_shared<Slate>();
-	s.reset(slate);
+	std::shared_ptr<Slate> s(slate);
 	s->SetParent(this);
 	Children[s->GetSlateID()] = s;
 	return this;
@@ -52,7 +55,7 @@ void Slate::Draw(SlateGeometry& boxGeometry, SlateGeometry& textGeometry)
 	for (const FUUID& id : RemovedChildren)
 	{
 		boxGeometry.EraseGeometry(id);
-		//textGeometry.EraseGeometry(id);
+		textGeometry.EraseGeometry(id);
 	}
 
 	RemovedChildren.clear();
