@@ -11,5 +11,6 @@ public:
     virtual void OnUpdate(float deltaTime) override;
 
 private:
-    float SpawnDelay = 1;
+    float SpawnDelay = 2.f;
+    float CurrentSpawnDelay = 0;
 };

@@ -18,9 +18,13 @@ public:
 	void Shoot();
 
 private:
+	void Collide(BoxSlate* slate);
+
 	TextSlate* ChildCounter;
 
+	PhysicsEngineBinding HitBoxBinding;
 	float MoveSpeed;
 	float CurrentFireDelay;
 	float FireDelay;
+	float ShipHealth;
 };

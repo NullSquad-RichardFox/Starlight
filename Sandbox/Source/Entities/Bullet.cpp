@@ -10,21 +10,17 @@ Bullet::Bullet()
 
 	MoveSpeed = 1000.0f;
 	BulletDamage = 5.f;
+	BulletDirection = glm::vec2(0, 1);
 
-	PhysicsEngine::Get()->AddHitBox(this, std::bind(&Bullet::Collision, this, std::placeholders::_1));
-}
-
-Bullet::~Bullet()
-{
-	PhysicsEngine::Get()->RemoveHitBox(this);
+	HitBoxBinding = PhysicsEngineBinding(this, &Bullet::Collision);
 }
 
 void Bullet::OnUpdate(float deltaTime)
 {
 	Slate::OnUpdate(deltaTime);
 
-	Position.y += MoveSpeed * deltaTime;
-	if (Position.y > 1200)
+	Position += BulletDirection * MoveSpeed * deltaTime;
+	if (Position.x > 1920 || Position.y > 1080 || Position.x - Size.x < 0 || Position.y - Size.y < 0)
 	{
 		RemoveFromParent();
 	}
@@ -33,6 +29,21 @@ void Bullet::OnUpdate(float deltaTime)
 float Bullet::GetDamage() const
 {
 	return BulletDamage;
+}
+
+ETeam Bullet::GetTeam() const
+{
+	return BulletTeam;
+}
+
+void Bullet::SetDirection(glm::vec2 dir) 
+{
+	BulletDirection = glm::normalize(dir);
+}
+
+void Bullet::SetTeam(ETeam team)
+{
+	BulletTeam = team;
 }
 
 void Bullet::Collision(BoxSlate* other)

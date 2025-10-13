@@ -59,3 +59,13 @@ void PhysicsEngine::RemoveHitBox(BoxSlate* slate)
 	if (auto it = CollidableSlates.find(slate); it != CollidableSlates.end())
 		CollidableSlates.erase(it);
 }
+
+PhysicsEngineBinding::PhysicsEngineBinding(BoxSlate* slate, void* func)
+{
+	PhysicsEngine::Get()->AddHitBox(slate, std::bind(func, slate, std::placeholders::_1));
+}
+
+PhysicsEngineBinding::~PhysicsEngineBinding()
+{
+	PhysicsEngine::Get()->RemoveHitBox(slate);
+}

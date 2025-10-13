@@ -5,6 +5,13 @@
 
 class BoxSlate;
 
+struct PhysicsEngineBinding
+{
+public:
+	PhysicsEngineBinding(BoxSlate* slate, void* func);
+	~PhysicsEngineBinding();
+}
+
 class PhysicsEngine
 {
 public:

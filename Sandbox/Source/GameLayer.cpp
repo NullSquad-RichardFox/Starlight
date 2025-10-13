@@ -16,10 +16,10 @@ void GameLayer::OnUpdate(float deltaTime)
 
     if (PhysicsEngine::Get()) PhysicsEngine::Get()->OnUpdate(deltaTime);
 
-    SpawnDelay -= deltaTime;
-    if (SpawnDelay <= 0)
+    CurrentSpawnDelay -= deltaTime;
+    if (CurrentSpawnDelay <= 0)
     {
         GetRootSlate()->AddChild(NewSlate<EnemyShip>());
-        SpawnDelay = 1;
+        CurrentSpawnDelay = SpawnDelay - CurrentSpawnDelay;
     }
 }
