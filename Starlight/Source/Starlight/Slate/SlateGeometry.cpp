@@ -23,6 +23,12 @@ void SlateGeometry::AppendGeometry(FUUID slateID, const std::vector<float>& data
 	// Slate already loaded in memory
 	if (auto it = SlateIndexRegistry.find(slateID); it != SlateIndexRegistry.end())
 	{
+		if (data.size() > CellSizes[it->second])
+		{
+			EraseGeometry(slateID);
+			AppendGeometry(slateID, data, texture, slateFlags);
+		}
+
 		// Static data does not change
 		if ((slateFlags & SF_Static) == SF_Static) return;
 
@@ -95,14 +101,28 @@ void SlateGeometry::EraseGeometry(FUUID slateID)
 		{
 			if (index > it->second) index -= CellSizes[it->second];
 		}
-		for (auto& [index, size] : CellSizes)
+
+		std::map<uint32, uint32> newTextRegistry;
+		for (auto& [index, texID] : TextureRegistry)
 		{
-			if (index > it->second) index -= CellSizes[it->second];
+			if (index == it->second) continue;
+
+			newTextRegistry.insert({ index > it->second ? index - CellSizes[it->second] : index, texID });
 		}
 
-		RecacheFlushData();
+		std::unordered_map<uint32, uint32> newCells;
+		for (auto& [index, size] : CellSizes)
+		{
+			if (index == it->second) continue;
+
+			newCells[index > it->second ? index - CellSizes[it->second] : index] = size;
+		}
+
+		TextureRegistry = newTextRegistry;
+		CellSizes = newCells;
 		SlateIndexRegistry.erase(it);
-		CellSizes.erase(CellSizes.begin() + (it - SlateIndexRegistry.begin()));
+
+		RecacheFlushData();
 	}
 }
 
