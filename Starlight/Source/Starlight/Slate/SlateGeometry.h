@@ -26,8 +26,7 @@ private:
 	void RecacheFlushData();
 
 	std::vector<float> VertexDataCache;
-	std::map<uint32, uint32> CellSizes;
-	std::vector<uint32> FreeSlotIndices;
+	std::unordered_map<uint32, uint32> CellSizes;
 	std::unordered_map<FUUID, uint32> SlateIndexRegistry;
 	std::map<uint32, uint32> TextureRegistry;
 	std::vector<std::shared_ptr<Texture>> TextureStorage;

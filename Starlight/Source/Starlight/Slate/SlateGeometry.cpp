@@ -36,45 +36,6 @@ void SlateGeometry::AppendGeometry(FUUID slateID, const std::vector<float>& data
 		return;
 	}
 
-	// Use free slot if availible
-	for (uint32 i = 0; i < FreeSlotIndices.size(); i++)
-	{
-		if (CellSizes[FreeSlotIndices[i]] < data.size()) continue;
-
-		SlateIndexRegistry[slateID] = FreeSlotIndices[i];
-
-		if (texture)
-		{
-			if (auto it = std::find(TextureStorage.begin(), TextureStorage.end(), texture); it != TextureStorage.end())
-			{
-				TextureRegistry.insert({ FreeSlotIndices[i], it - TextureStorage.begin() });
-			}
-			else
-			{
-				TextureRegistry.insert({ FreeSlotIndices[i], TextureStorage.size() });
-				TextureStorage.push_back(texture);
-			}
-		}
-
-		for (uint32 j = 0; j < data.size(); j++)
-			VertexDataCache[FreeSlotIndices[i] + j] = data[j];
-
-		uint32 diff = CellSizes[FreeSlotIndices[i]] - data.size();
-		if (diff == 0)
-		{
-			FreeSlotIndices.erase(FreeSlotIndices.begin() + i);
-		}
-		else
-		{
-			CellSizes[FreeSlotIndices[i]] -= diff;
-			FreeSlotIndices[i] += data.size();
-			CellSizes[FreeSlotIndices[i]] = diff;
-		}
-
-		RecacheFlushData();
-		return;
-	}
-
 	// Append to the end if no space is free
 	SlateIndexRegistry[slateID] = VertexDataCache.size();
 	CellSizes[VertexDataCache.size()] = data.size();
@@ -100,9 +61,6 @@ void SlateGeometry::EraseGeometry(FUUID slateID)
 {
 	if (auto it = SlateIndexRegistry.find(slateID); it != SlateIndexRegistry.end())
 	{
-		// We do not clear data only set it to be clear when new data is added
-		FreeSlotIndices.push_back(it->second);
-
 		// Remove textures
 		if (auto tIt = TextureRegistry.find(it->second); tIt != TextureRegistry.end())
 		{
@@ -132,13 +90,19 @@ void SlateGeometry::EraseGeometry(FUUID slateID)
 		}
 
 		// Resets values in cache
-		for (uint32 i = 0; i < CellSizes[it->second]; i++)
+		VertexDataCache.erase(VertexDataCache.begin() + it->second, VertexDataCache.begin() + it->second + CellSizes[it->second]);
+		for (auto& [slate, index] : SlateIndexRegistry)
 		{
-			VertexDataCache[it->second + i] = 0;
+			if (index > it->second) index -= CellSizes[it->second];
+		}
+		for (auto& [index, size] : CellSizes)
+		{
+			if (index > it->second) index -= CellSizes[it->second];
 		}
 
 		RecacheFlushData();
 		SlateIndexRegistry.erase(it);
+		CellSizes.erase(CellSizes.begin() + (it - SlateIndexRegistry.begin()));
 	}
 }
 
