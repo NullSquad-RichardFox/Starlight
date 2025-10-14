@@ -155,7 +155,6 @@ void SlateGeometry::RecacheFlushData()
 	CachedFlushData.reserve(TextureStorage.size() / MaxTextureCount + 1);
 	
 	uint32 prevIndex = 0; 
-	uint32 currentTextureCount = 0;
 	
 	// Itter through all data
 	for (const auto& [index, size] : CellSizes)
@@ -164,13 +163,11 @@ void SlateGeometry::RecacheFlushData()
 		if (auto it = TextureRegistry.find(index); it != TextureRegistry.end())
 		{
 			for (uint32 i = 0; i < (size / BufferSize); i++)
-				VertexDataCache[index + BufferSize * i + 9] = currentTextureCount;
+				VertexDataCache[index + BufferSize * i + 9] = it->second % MaxTextureCount;
 	
-			currentTextureCount++;
-			if (currentTextureCount == MaxTextureCount)
+			if (it->second % MaxTextureCount == MaxTextureCount - 1)
 			{
 				CachedFlushData.push_back(std::make_pair<void*, uint32>(VertexDataCache.data() + prevIndex, index - prevIndex));
-				currentTextureCount = 0;
 				prevIndex = index;
 			}
 		}

@@ -11,6 +11,9 @@ public:
     virtual void OnUpdate(float deltaTime) override;
 
 private:
+    TextSlate* ChildCounterText;
+    TextSlate* FPSDisplayText;
+
     float SpawnDelay = 2.f;
     float CurrentSpawnDelay = 0;
 };

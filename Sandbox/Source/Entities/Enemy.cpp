@@ -1,6 +1,6 @@
 #include "Enemy.h"
-#include "Physics.h"
 #include "Bullet.h"
+#include "Physics.h"
 
 #include "glm/gtc/random.hpp"
 
@@ -15,7 +15,12 @@ EnemyShip::EnemyShip()
     CurrentFireDelay = 0;
     FireDelay = 1;
 
-	HitBoxBinding = PhysicsEngineBinding(this, &EnemyShip::Collision);
+    PhysicsEngine::Get()->AddHitBox(this, std::bind(&EnemyShip::Collision, this, std::placeholders::_1));
+}
+
+EnemyShip::~EnemyShip()
+{
+    PhysicsEngine::Get()->RemoveHitBox(this);
 }
 
 void EnemyShip::OnUpdate(float deltaTime)
@@ -26,7 +31,7 @@ void EnemyShip::OnUpdate(float deltaTime)
     if (CurrentFireDelay <= 0)
     {
         CurrentFireDelay = FireDelay - CurrentFireDelay;
-        AddChild(NewSlate<Bullet>()->SetPosition(Position + Size / 2.0f)->SetDirection(glm::vec2(0, -1))->SetTeam(ETeam::Enemy));
+        AddChild(NewSlate<Bullet>()->SetDirection(glm::vec2(0, -1))->SetTeam(ETeam::Enemy)->SetPosition(Position + Size / 2.0f));
     }
 }
 

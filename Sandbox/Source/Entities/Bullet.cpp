@@ -1,6 +1,6 @@
 #include "Bullet.h"
-#include "Physics.h"
 #include "Enemy.h"
+#include "Physics.h"
 
 
 Bullet::Bullet()
@@ -12,7 +12,12 @@ Bullet::Bullet()
 	BulletDamage = 5.f;
 	BulletDirection = glm::vec2(0, 1);
 
-	HitBoxBinding = PhysicsEngineBinding(this, &Bullet::Collision);
+	PhysicsEngine::Get()->AddHitBox(this, std::bind(&Bullet::Collision, this, std::placeholders::_1));
+}
+
+Bullet::~Bullet()
+{
+	PhysicsEngine::Get()->RemoveHitBox(this);
 }
 
 void Bullet::OnUpdate(float deltaTime)
@@ -36,14 +41,16 @@ ETeam Bullet::GetTeam() const
 	return BulletTeam;
 }
 
-void Bullet::SetDirection(glm::vec2 dir) 
+Bullet* Bullet::SetDirection(glm::vec2 dir) 
 {
 	BulletDirection = glm::normalize(dir);
+	return this;
 }
 
-void Bullet::SetTeam(ETeam team)
+Bullet* Bullet::SetTeam(ETeam team)
 {
 	BulletTeam = team;
+	return this;
 }
 
 void Bullet::Collision(BoxSlate* other)

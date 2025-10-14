@@ -7,6 +7,7 @@ class Fighter : public BoxSlate
 {
 public:
 	Fighter();
+	virtual ~Fighter() override;
 
 	virtual void OnUpdate(float deltaTime) override;
 
@@ -20,9 +21,6 @@ public:
 private:
 	void Collide(BoxSlate* slate);
 
-	TextSlate* ChildCounter;
-
-	PhysicsEngineBinding HitBoxBinding;
 	float MoveSpeed;
 	float CurrentFireDelay;
 	float FireDelay;
