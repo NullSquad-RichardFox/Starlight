@@ -79,6 +79,7 @@ void Fighter::Collide(BoxSlate* slate)
     {
         if (bullet->GetTeam() == ETeam::Ally) return;
 
+		LOG("Ship health: {}", ShipHealth);
         ShipHealth -= bullet->GetDamage();
         if (ShipHealth <= 0)
         {

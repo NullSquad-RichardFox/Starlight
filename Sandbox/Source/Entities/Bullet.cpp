@@ -1,5 +1,6 @@
 #include "Bullet.h"
 #include "Enemy.h"
+#include "Fighter.h"
 #include "Physics.h"
 
 
@@ -58,5 +59,9 @@ void Bullet::Collision(BoxSlate* other)
 	if (EnemyShip* enemy = dynamic_cast<EnemyShip*>(other))
 	{
 		if (BulletTeam == ETeam::Ally) RemoveFromParent();
+	}
+	else if (Fighter* fighter = dynamic_cast<Fighter*>(other))
+	{
+		if (BulletTeam == ETeam::Enemy) RemoveFromParent();
 	}
 }
