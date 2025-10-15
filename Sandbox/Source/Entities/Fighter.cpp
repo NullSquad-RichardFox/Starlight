@@ -1,6 +1,5 @@
 #include "Fighter.h"
 #include "Bullet.h"
-#include "Physics.h"
 
 
 Fighter::Fighter()
@@ -8,9 +7,6 @@ Fighter::Fighter()
 	MoveSpeed = 500.0f;
 	FireDelay = 0.1f;
 	CurrentFireDelay = 0;
-	ShipHealth = 50.f;
-
-	PhysicsEngine::Get()->AddHitBox(this, std::bind(&Fighter::Collide, this, std::placeholders::_1));
 
 	InputSubsystem::BindKey(EKeyType::W, std::bind(&Fighter::MoveUp, this), EInputAction::Pressed);
 	InputSubsystem::BindKey(EKeyType::S, std::bind(&Fighter::MoveDown, this), EInputAction::Pressed);
@@ -21,11 +17,10 @@ Fighter::Fighter()
 	Position = glm::vec2(860, 440);
 	Size = glm::vec2(200, 200);
 	SlateTexture = std::make_shared<Texture>("Assets/Images/fighter.png");
-}
 
-Fighter::~Fighter()
-{
-	PhysicsEngine::Get()->RemoveHitBox(this);
+	SetShipTeam(ETeam::Ally);
+	SetShipMaxHealth(50.f);
+	SetShipHealth(50.f);
 }
 
 void Fighter::OnUpdate(float deltaTime)
@@ -71,19 +66,4 @@ void Fighter::Shoot()
 		AddChild(NewSlate<Bullet>()->SetTeam(ETeam::Ally)->SetPosition(Position + Size / 2.f));
 		CurrentFireDelay = FireDelay;
 	}
-}
-
-void Fighter::Collide(BoxSlate* slate)
-{
-	if (Bullet* bullet = dynamic_cast<Bullet*>(slate))
-    {
-        if (bullet->GetTeam() == ETeam::Ally) return;
-
-		LOG("Ship health: {}", ShipHealth);
-        ShipHealth -= bullet->GetDamage();
-        if (ShipHealth <= 0)
-        {
-            RemoveFromParent();
-        }
-    }
 }

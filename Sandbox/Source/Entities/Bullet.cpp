@@ -1,6 +1,5 @@
 #include "Bullet.h"
-#include "Enemy.h"
-#include "Fighter.h"
+#include "Ship.h"
 #include "Physics.h"
 
 
@@ -56,12 +55,14 @@ Bullet* Bullet::SetTeam(ETeam team)
 
 void Bullet::Collision(BoxSlate* other)
 {
-	if (EnemyShip* enemy = dynamic_cast<EnemyShip*>(other))
+	if (Ship* ship = dynamic_cast<Ship*>(other))
 	{
-		if (BulletTeam == ETeam::Ally) RemoveFromParent();
+		if (ship->GetShipTeam() == BulletTeam) return;
 	}
-	else if (Fighter* fighter = dynamic_cast<Fighter*>(other))
+	else if (Bullet* bullet = dynamic_cast<Bullet*>(other))
 	{
-		if (BulletTeam == ETeam::Enemy) RemoveFromParent();
+		if (bullet->BulletTeam == BulletTeam) return;
 	}
+
+	RemoveFromParent();
 }

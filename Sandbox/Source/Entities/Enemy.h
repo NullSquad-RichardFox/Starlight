@@ -1,21 +1,17 @@
 #pragma once
 
 #include "Starlight/Starlight.h"
+#include "Ship.h"
 
 
-class EnemyShip : public BoxSlate
+class EnemyShip : public Ship
 {
 public:
     EnemyShip();
-    virtual ~EnemyShip() override;
 
     virtual void OnUpdate(float deltaTime) override;
     
 private:
-    void Collision(BoxSlate* other);
-
-    float ShipHealth;
-
     float CurrentFireDelay;
     float FireDelay;
 };
