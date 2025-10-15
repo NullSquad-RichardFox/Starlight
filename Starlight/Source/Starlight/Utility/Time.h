@@ -27,12 +27,13 @@ public:
 
 	inline static void OnUpdate(float& outDeltaTime) { outDeltaTime = sTimeInstance->OnUpdate_Int(); };
 	inline static float GetDeltaTime() { return sTimeInstance->DeltaTime; }
-
+	inline static float GetGLFWTime() { return sTimeInstance->GetGLFWTime_Int(); }
 	static void StartTimer(TimerType& timer);
 	static void EndTimer(TimerType& timer);
 
 private:
 	float OnUpdate_Int();
+	float GetGLFWTime_Int();
 
 	inline static Time* sTimeInstance = nullptr;
 

@@ -57,6 +57,6 @@ void Bullet::Collision(BoxSlate* other)
 {
 	if (EnemyShip* enemy = dynamic_cast<EnemyShip*>(other))
 	{
-		RemoveFromParent();
+		if (BulletTeam == ETeam::Ally) RemoveFromParent();
 	}
 }

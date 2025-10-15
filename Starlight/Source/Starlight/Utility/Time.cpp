@@ -40,6 +40,11 @@ float Time::OnUpdate_Int()
 	return DeltaTime;
 }
 
+float Time::GetGLFWTime_Int()
+{
+	return (float)glfwGetTime();
+}
+
 TimerType::TimerType()
 	:Duration(nullptr)
 {
