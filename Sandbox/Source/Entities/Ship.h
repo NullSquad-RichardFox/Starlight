@@ -1,13 +1,8 @@
 #pragma once
 
 #include "Starlight/Starlight.h"
+#include "Bullet.h"
 
-
-enum class ETeam
-{
-	Enemy,
-	Ally
-};
 
 class Ship : public BoxSlate
 {

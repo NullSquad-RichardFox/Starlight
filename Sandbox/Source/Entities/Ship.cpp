@@ -32,7 +32,18 @@ Ship* Ship::SetShipTeam(ETeam team)
     return this;
 }
 
-void Ship::Collision(BoxSlate* other)
+void Ship::Collide(BoxSlate* other)
 {
-
+    if (Bullet* bullet = dynamic_cast<Bullet*>(other))
+    {
+        if (bullet->GetTeam() != ShipTeam)
+        {
+            // Damage
+            ShipHealth -= bullet->GetDamage();
+            if (ShipHealth <= 0)
+            {
+                RemoveFromParent();
+            }
+        }
+    }
 }
