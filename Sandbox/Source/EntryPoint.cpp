@@ -1,5 +1,6 @@
-#include "GameLayer.h"
 #include "Starlight/Starlight.h"
+#include "GameLayer.h"
+#include "DebugLayer.h"
 #include "Entities/Fighter.h"
 #include "Physics.h"
 
@@ -13,7 +14,12 @@ int main()
 	app.Initialize();
 	PhysicsEngine::Initialize();
 
-	app.AddLayer(std::make_shared<GameLayer>());
+	auto gameLayer = std::make_shared<GameLayer>();
+	app.AddLayer(gameLayer);
+	auto debugLayer = std::make_shared<DebugLayer>();
+	debugLayer->SetControlledLayer(gameLayer);
+	app.AddLayer(debugLayer);
+
 	app.Run();
 	
 	PhysicsEngine::Shutdown();
